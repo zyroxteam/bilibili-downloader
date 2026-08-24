@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bilibili Downloader • ARJUN RAJPUT (MADE BY ZYROX)</title>
-  <meta name="description" content="Download Bilibili Videos, Anime, Donghua & MP3 Audio in 1080p, 720p, 480p without watermark. Created by Arjun Rajput, Powered by ZYROX.">
+  <title>All-In-One Video Downloader • ARJUN RAJPUT (MADE BY ZYROX)</title>
+  <meta name="description" content="Download Videos from Bilibili, YouTube, Instagram Reels, TikTok, Twitter/X, Facebook, Reddit & Pinterest in 1080p Full HD & MP3. Created by Arjun Rajput, Powered by ZYROX.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -28,9 +28,9 @@
       </div>
       <nav class="nav-links">
         <a href="#downloader" class="nav-link active">Downloader</a>
+        <a href="#platforms" class="nav-link">Supported Apps</a>
         <a href="#features" class="nav-link">Features</a>
         <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="#faq" class="nav-link">FAQ</a>
       </nav>
       <div class="nav-action">
         <span class="status-pill"><span class="status-dot"></span> Vercel Cloud Active</span>
@@ -43,16 +43,60 @@
     <section class="hero-section" id="downloader">
       <div class="hero-badge">
         <span class="badge-sparkle">✨</span>
-        <span>Ultra HD • Zero Watermark • 100% Free</span>
+        <span>All-In-One Video & Audio Downloader Engine</span>
       </div>
       <h1 class="hero-title">
-        Bilibili Video & Audio <span class="gradient-text">Downloader</span>
+        Download Videos From <br>
+        <span class="gradient-text">Any Social Platform</span>
       </h1>
       <p class="hero-subtitle">
-        Download Bilibili videos, Donghua series, clips, and high-bitrate MP3 audio in <strong>1080p Full HD</strong>, <strong>720p HD</strong>, and <strong>480p</strong> with zero compression.
+        Download videos, reels, stories, and MP3 audio from <strong>Bilibili, YouTube, Instagram, TikTok, Twitter/X, Facebook, Reddit & Pinterest</strong> in <strong>Ultra HD (1080p, 720p, 480p)</strong> with zero watermark.
       </p>
 
-      <!-- URL Input Box -->
+      <!-- Supported Platforms Interactive Bar -->
+      <div class="platforms-bar" id="platforms">
+        <span class="platform-bar-title">Supported Apps:</span>
+        <div class="platform-chips-scroll">
+          <div class="platform-chip active" data-platform="all">
+            <span class="chip-icon">⚡</span>
+            <span>All Apps (Auto)</span>
+          </div>
+          <div class="platform-chip" data-platform="bilibili">
+            <span class="chip-icon">📺</span>
+            <span>Bilibili</span>
+          </div>
+          <div class="platform-chip" data-platform="youtube">
+            <span class="chip-icon">🔴</span>
+            <span>YouTube & Shorts</span>
+          </div>
+          <div class="platform-chip" data-platform="instagram">
+            <span class="chip-icon">📸</span>
+            <span>Instagram & Reels</span>
+          </div>
+          <div class="platform-chip" data-platform="tiktok">
+            <span class="chip-icon">🎵</span>
+            <span>TikTok (No-WM)</span>
+          </div>
+          <div class="platform-chip" data-platform="twitter">
+            <span class="chip-icon">🐦</span>
+            <span>Twitter / X</span>
+          </div>
+          <div class="platform-chip" data-platform="facebook">
+            <span class="chip-icon">📘</span>
+            <span>Facebook</span>
+          </div>
+          <div class="platform-chip" data-platform="reddit">
+            <span class="chip-icon">🤖</span>
+            <span>Reddit</span>
+          </div>
+          <div class="platform-chip" data-platform="pinterest">
+            <span class="chip-icon">📌</span>
+            <span>Pinterest</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Input Box -->
       <div class="search-wrapper">
         <div class="search-box">
           <div class="input-icon">
@@ -64,7 +108,7 @@
           <input 
             type="text" 
             id="videoUrlInput" 
-            placeholder="Paste Bilibili link here (e.g. https://www.bilibili.com/video/BV... or b23.tv/...)" 
+            placeholder="Paste any video link here (Bilibili, Instagram, YouTube, TikTok, X, FB)..." 
             autocomplete="off"
             spellcheck="false"
           >
@@ -79,17 +123,19 @@
             <button id="clearBtn" class="action-btn clear-btn hidden" title="Clear input">✕</button>
           </div>
           <button id="fetchBtn" class="btn-primary">
-            <span class="btn-text">Get Download Links</span>
+            <span class="btn-text">Get Video Formats</span>
             <span class="btn-icon">⚡</span>
             <div class="spinner hidden"></div>
           </button>
         </div>
 
-        <!-- Quick Demo Links -->
+        <!-- Quick Demo Examples -->
         <div class="quick-examples">
-          <span class="examples-label">Try Example:</span>
-          <button class="example-chip" data-url="https://www.bilibili.com/video/BV1xx411c7mD">Sample Anime Video</button>
-          <button class="example-chip" data-url="https://www.bilibili.com/video/BV17x411w7KC">Popular Donghua Clip</button>
+          <span class="examples-label">Try Samples:</span>
+          <button class="example-chip" data-url="https://www.bilibili.com/video/BV1xx411c7mD">📺 Bilibili Anime</button>
+          <button class="example-chip" data-url="https://www.tiktok.com/@tiktok/video/7106594312292453678">🎵 TikTok Reel</button>
+          <button class="example-chip" data-url="https://twitter.com/Twitter/status/1500000000000000000">🐦 Twitter/X Video</button>
+          <button class="example-chip" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">🔴 YouTube Video</button>
         </div>
       </div>
 
@@ -97,8 +143,8 @@
       <div id="errorAlert" class="error-card hidden">
         <div class="error-icon">⚠️</div>
         <div class="error-content">
-          <h4 id="errorTitle">Unable to fetch video</h4>
-          <p id="errorMessage">Please check the URL and try again.</p>
+          <h4 id="errorTitle">Unable to fetch media</h4>
+          <p id="errorMessage">Please check the link and ensure the video is public.</p>
         </div>
       </div>
 
@@ -123,15 +169,10 @@
           <div class="media-preview-container">
             <img id="videoThumb" src="" alt="Thumbnail" class="media-thumb">
             <span id="videoDuration" class="duration-badge">00:00</span>
-            <button id="previewPlayBtn" class="play-overlay-btn" title="Preview video">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-            </button>
           </div>
           <div class="media-meta">
             <div class="meta-badges">
-              <span id="videoBvid" class="badge-tag bvid-tag">BV...</span>
+              <span id="platformBadge" class="badge-tag platform-tag">⚡ All-in-One</span>
               <span class="badge-tag safe-tag">✔ No Watermark Clean Stream</span>
             </div>
             <h2 id="videoTitle" class="video-title">Video Title</h2>
@@ -139,21 +180,17 @@
               <img id="authorAvatar" src="" alt="Author" class="author-avatar">
               <div class="author-info">
                 <span id="authorName" class="author-name">Creator</span>
-                <span id="videoPubDate" class="pub-date">Published Date</span>
+                <span id="videoMetaExtra" class="pub-date">Public Media</span>
               </div>
             </div>
             <div class="stats-row">
               <div class="stat-item">
                 <span class="stat-icon">👁️</span>
-                <span id="statViews">0</span> <small>Views</small>
+                <span id="statViews">Public</span>
               </div>
               <div class="stat-item">
                 <span class="stat-icon">❤️</span>
-                <span id="statLikes">0</span> <small>Likes</small>
-              </div>
-              <div class="stat-item">
-                <span class="stat-icon">💬</span>
-                <span id="statDanmaku">0</span> <small>Danmaku</small>
+                <span id="statLikes">Supported</span>
               </div>
             </div>
           </div>
@@ -162,13 +199,61 @@
         <!-- Formats Grid -->
         <div class="formats-section">
           <div class="formats-header">
-            <h3>Available Download Formats</h3>
-            <span class="formats-count" id="formatCount">5 Formats Ready</span>
+            <h3>Available Download Resolutions</h3>
+            <span class="formats-count" id="formatCount">Formats Ready</span>
           </div>
 
           <div class="formats-grid" id="formatsGrid">
-            <!-- Format Cards Injected by JavaScript -->
+            <!-- Injected via JavaScript -->
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Apps Logos Grid -->
+    <section class="social-logos-section">
+      <div class="section-badge">SUPPORTED ECOSYSTEM</div>
+      <h2 class="section-title">One Downloader For <span class="gradient-text">All Social Apps</span></h2>
+      <div class="apps-grid">
+        <div class="app-card bilibili-glow">
+          <div class="app-icon">📺</div>
+          <h4>Bilibili</h4>
+          <span class="app-tag">1080p • Donghua • Anime</span>
+        </div>
+        <div class="app-card youtube-glow">
+          <div class="app-icon">🔴</div>
+          <h4>YouTube</h4>
+          <span class="app-tag">Shorts • 1080p • MP3</span>
+        </div>
+        <div class="app-card instagram-glow">
+          <div class="app-icon">📸</div>
+          <h4>Instagram</h4>
+          <span class="app-tag">Reels • Posts • Stories</span>
+        </div>
+        <div class="app-card tiktok-glow">
+          <div class="app-icon">🎵</div>
+          <h4>TikTok</h4>
+          <span class="app-tag">No Watermark • HD</span>
+        </div>
+        <div class="app-card twitter-glow">
+          <div class="app-icon">🐦</div>
+          <h4>Twitter / X</h4>
+          <span class="app-tag">Direct MP4 • Fast</span>
+        </div>
+        <div class="app-card facebook-glow">
+          <div class="app-icon">📘</div>
+          <h4>Facebook</h4>
+          <span class="app-tag">Reels • HD Videos</span>
+        </div>
+        <div class="app-card reddit-glow">
+          <div class="app-icon">🤖</div>
+          <h4>Reddit</h4>
+          <span class="app-tag">Audio + Video Merged</span>
+        </div>
+        <div class="app-card pinterest-glow">
+          <div class="app-icon">📌</div>
+          <h4>Pinterest</h4>
+          <span class="app-tag">Video Pins • HD</span>
         </div>
       </div>
     </section>
@@ -176,77 +261,51 @@
     <!-- Features Section -->
     <section class="features-section" id="features">
       <div class="section-badge">ZYROX ARCHITECTURE</div>
-      <h2 class="section-title">Why Choose <span class="gradient-text">Arjun Rajput</span> Downloader?</h2>
+      <h2 class="section-title">Engineered by <span class="gradient-text">Arjun Rajput</span></h2>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon glow-cyan">🚫</div>
           <h3>Zero Watermark</h3>
-          <p>Direct Desktop CDN stream bypass strips app watermarks, logos, and outro cards for crystal-clear original video.</p>
+          <p>Direct master CDN stream bypass eliminates watermarks, branding logos, and app outro cards.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon glow-purple">⚡</div>
-          <h3>Vercel Turbo Speed</h3>
-          <p>High-bandwidth serverless stream proxy enables blazing-fast download speeds straight to your device.</p>
+          <h3>Vercel Serverless Speed</h3>
+          <p>Multi-threaded high-speed stream proxy delivers uninterrupted downloads directly to your device.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon glow-green">🎬</div>
-          <h3>All Resolutions Supported</h3>
-          <p>Select from 1080p Full HD, 720p HD, 480p, 360p, or extract high-quality 320kbps MP3 audio tracks.</p>
+          <h3>Original Ultra HD</h3>
+          <p>Extracts up to 1080p Full HD, 720p HD, and high-bitrate 320kbps MP3 audio tracks.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon glow-yellow">📱</div>
-          <h3>Universal Compatibility</h3>
-          <p>Works seamlessly on Android, iPhone, Windows, Mac, and Linux browsers without any login or extension.</p>
+          <h3>100% Free & Universal</h3>
+          <p>Zero software installation, zero login. Works on Android, iPhone, Windows, Mac, and Linux.</p>
         </div>
       </div>
     </section>
 
     <!-- How It Works Section -->
     <section class="how-section" id="how-it-works">
-      <div class="section-badge">3 EASY STEPS</div>
-      <h2 class="section-title">How To Download Bilibili Videos</h2>
+      <div class="section-badge">3 SIMPLE STEPS</div>
+      <h2 class="section-title">How To Download Any Video</h2>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-number">01</div>
-          <h3>Copy Bilibili Link</h3>
-          <p>Open Bilibili app or website, copy the video link or click Share ➔ Copy Link.</p>
+          <h3>Copy Link</h3>
+          <p>Copy the video, reel, or short link from any supported app (Bilibili, Instagram, TikTok, YouTube, etc.).</p>
         </div>
         <div class="step-card">
           <div class="step-number">02</div>
-          <h3>Paste In Downloader</h3>
-          <p>Paste the link in the input box above and click "Get Download Links".</p>
+          <h3>Paste In Box</h3>
+          <p>Paste the link into the search box above. The engine automatically detects the platform.</p>
         </div>
         <div class="step-card">
           <div class="step-number">03</div>
-          <h3>Download & Enjoy</h3>
-          <p>Choose your preferred quality (1080p / 720p / MP3) and click Download!</p>
+          <h3>Download File</h3>
+          <p>Choose 1080p, 720p, or MP3 and click Download. Video saves directly to your device!</p>
         </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq-section" id="faq">
-      <div class="section-badge">NEED HELP?</div>
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      <div class="faq-accordion">
-        <details class="faq-item">
-          <summary>Does this tool download videos without watermark?</summary>
-          <div class="faq-answer">
-            <p>Yes! Our ZYROX backend uses Desktop CDN protocol headers that pull the original raw source stream, bypassing mobile app watermarks and outro cards.</p>
-          </div>
-        </details>
-        <details class="faq-item">
-          <summary>Is it completely free to use?</summary>
-          <div class="faq-answer">
-            <p>Yes, 100% free with unlimited downloads and no registration or subscription required.</p>
-          </div>
-        </details>
-        <details class="faq-item">
-          <summary>Where are downloaded files saved?</summary>
-          <div class="faq-answer">
-            <p>Files are saved directly in your device's default <strong>Downloads</strong> folder (accessible via Gallery or File Manager).</p>
-          </div>
-        </details>
       </div>
     </section>
   </main>
@@ -259,14 +318,14 @@
         <span class="footer-sub">POWERED BY ZYROX ENGINE</span>
       </div>
       <p class="footer-copy">
-        © 2026 Arjun Rajput. Designed & Built for High-Performance Video Downloading.
+        © 2026 Arjun Rajput. Universal Video & Audio Downloader Platform.
       </p>
       <div class="footer-tags">
         <span>Vercel Optimized</span>
         <span>•</span>
-        <span>No Watermark</span>
+        <span>All Platforms Supported</span>
         <span>•</span>
-        <span>High Speed CDN</span>
+        <span>No Watermark</span>
       </div>
     </div>
   </footer>

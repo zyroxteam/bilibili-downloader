@@ -1,11 +1,10 @@
 // Vercel Serverless Function: api/download.js
-// Proxies Bilibili stream with required headers to prevent 403 Forbidden errors
-// and sets Content-Disposition for 1-click downloads directly to user's device.
+// Universal stream proxy with required Referer & User-Agent headers
+// Bypasses 403 Forbidden checks and triggers direct file downloads with proper filenames.
 
 import { Readable } from 'stream';
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Range');
@@ -14,73 +13,61 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const { bvid, cid, qn = 80, type, title = 'Bilibili_Video', ext = 'mp4' } = req.query;
-
-  if (!bvid || !cid) {
-    return res.status(400).send('Missing required video parameters (bvid, cid).');
-  }
+  const { bvid, cid, qn = 80, type, title = 'Video_Download', ext = 'mp4', directUrl } = req.query;
 
   try {
     let streamUrl = null;
+    let customHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+    };
 
-    if (type === 'audio') {
-      // Audio stream via DASH
-      const dashUrl = `https://api.bilibili.com/x/player/playurl?bvid=${bvid}&cid=${cid}&qn=80&fnval=16&fnver=0&fourk=1`;
-      const dashRes = await fetch(dashUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-          'Referer': 'https://www.bilibili.com'
+    if (directUrl) {
+      streamUrl = decodeURIComponent(directUrl);
+    } else if (bvid && cid) {
+      customHeaders['Referer'] = 'https://www.bilibili.com';
+
+      if (type === 'audio') {
+        const dashUrl = `https://api.bilibili.com/x/player/playurl?bvid=${bvid}&cid=${cid}&qn=80&fnval=16&fnver=0&fourk=1`;
+        const dashRes = await fetch(dashUrl, { headers: customHeaders });
+        const dashData = await dashRes.json();
+        if (dashData.code === 0 && dashData.data?.dash?.audio?.length > 0) {
+          streamUrl = dashData.data.dash.audio[0].baseUrl || dashData.data.dash.audio[0].url;
         }
-      });
-      const dashData = await dashRes.json();
-      if (dashData.code === 0 && dashData.data?.dash?.audio?.length > 0) {
-        streamUrl = dashData.data.dash.audio[0].baseUrl || dashData.data.dash.audio[0].url;
-      }
-    } else {
-      // Video MP4 stream
-      const playUrlApi = `https://api.bilibili.com/x/player/playurl?bvid=${bvid}&cid=${cid}&qn=${qn}&type=mp4&platform=html5`;
-      const playRes = await fetch(playUrlApi, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-          'Referer': 'https://www.bilibili.com'
+      } else {
+        const playUrlApi = `https://api.bilibili.com/x/player/playurl?bvid=${bvid}&cid=${cid}&qn=${qn}&type=mp4&platform=html5`;
+        const playRes = await fetch(playUrlApi, { headers: customHeaders });
+        const playData = await playRes.json();
+        if (playData.code === 0 && playData.data?.durl?.length > 0) {
+          streamUrl = playData.data.durl[0].url;
         }
-      });
-      const playData = await playRes.json();
-      if (playData.code === 0 && playData.data?.durl?.length > 0) {
-        streamUrl = playData.data.durl[0].url;
       }
     }
 
     if (!streamUrl) {
-      return res.status(404).send('Stream URL could not be resolved from Bilibili.');
+      return res.status(404).send('Stream URL could not be resolved.');
     }
 
-    // Forward range header if present for resumable downloads
-    const forwardHeaders = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-      'Referer': 'https://www.bilibili.com'
-    };
     if (req.headers.range) {
-      forwardHeaders['Range'] = req.headers.range;
+      customHeaders['Range'] = req.headers.range;
     }
 
     const cdnRes = await fetch(streamUrl, {
       method: req.method === 'HEAD' ? 'HEAD' : 'GET',
-      headers: forwardHeaders
+      headers: customHeaders
     });
 
     if (!cdnRes.ok && cdnRes.status !== 206) {
-      return res.status(cdnRes.status).send(`Failed to stream from CDN: ${cdnRes.statusText}`);
+      // If direct proxy fails, redirect to original stream
+      return res.redirect(streamUrl);
     }
 
     // Sanitize filename
-    const safeTitle = (title || 'Bilibili_Video').replace(/[/\\?%*:|"<>]/g, '_').substring(0, 80);
+    const safeTitle = (title || 'Video').replace(/[/\\?%*:|"<>]/g, '_').substring(0, 80);
     const finalFilename = `[ARJUN_RAJPUT]_${safeTitle}.${ext}`;
 
-    // Set streaming & attachment headers
-    res.setHeader('Content-Type', type === 'audio' ? 'audio/mpeg' : 'video/mp4');
+    res.setHeader('Content-Type', type === 'audio' || ext === 'mp3' ? 'audio/mpeg' : 'video/mp4');
     res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(finalFilename)}"; filename*=UTF-8''${encodeURIComponent(finalFilename)}`);
-    
+
     if (cdnRes.headers.has('content-length')) {
       res.setHeader('Content-Length', cdnRes.headers.get('content-length'));
     }
@@ -96,22 +83,20 @@ export default async function handler(req, res) {
       return res.status(200).end();
     }
 
-    // Stream pipe to client
     if (cdnRes.body) {
       const nodeStream = Readable.fromWeb(cdnRes.body);
       nodeStream.pipe(res);
-      nodeStream.on('error', (err) => {
-        console.error('Stream error:', err);
+      nodeStream.on('error', () => {
         if (!res.headersSent) res.status(500).end();
       });
     } else {
-      res.status(500).send('Unable to read stream body');
+      res.redirect(streamUrl);
     }
 
   } catch (error) {
-    console.error('Download proxy error:', error);
+    console.error('Download handler error:', error);
     if (!res.headersSent) {
-      res.status(500).send(`Server download error: ${error.message}`);
+      res.status(500).send(`Download failed: ${error.message}`);
     }
   }
 }
