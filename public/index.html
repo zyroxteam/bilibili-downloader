@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ARJUN RAJPUT – All Video Downloader</title>
-  <meta name="description" content="3D Tactile Buttons • Sound Effects • AMOLED Glassmorphism Video & Audio Downloader Android App Concept. Created by Arjun Rajput, Powered by ZYROX.">
+  <title>ARJUN RAJPUT – All Video & Movie Downloader</title>
+  <meta name="description" content="Download Movies, Long Videos, Songs in 1080p Full HD & MP3. Real-Time Battery, Speed, Time & Claymorphism UI. Created by Arjun Rajput, Powered by ZYROX.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -12,15 +12,12 @@
 </head>
 <body class="theme-amoled">
 
-  <!-- Ambient Particle Canvas -->
-  <canvas id="ambientCanvas" class="ambient-canvas"></canvas>
-
-  <!-- Ambient AMOLED Neon Glow Orbs -->
+  <!-- Ambient Glows -->
   <div class="glow-orb orb-cyan"></div>
   <div class="glow-orb orb-purple"></div>
 
   <!-- =========================================================================
-       1. ROUND SPLASH SCREEN (Circular Glassmorphic Disc with Rotating Rings)
+       ROUND CLAY SPLASH SCREEN
        ========================================================================= -->
   <div id="splashScreen" class="splash-screen">
     <div class="splash-content">
@@ -28,50 +25,34 @@
         <div class="round-neon-ring"></div>
         <div class="round-neon-ring-inner"></div>
         <div class="round-glass-disc">
-          <div class="glass-gloss-sweep"></div>
           <span class="disc-icon-lightning">⚡</span>
           <span class="disc-brand-title">ARJUN RAJPUT</span>
-          <span class="disc-brand-sub">ALL VIDEO DOWNLOADER</span>
+          <span class="disc-brand-sub">ALL VIDEO & MOVIE DOWNLOADER</span>
         </div>
       </div>
       <div class="splash-round-loader">
         <div class="round-loader-fill"></div>
       </div>
-      <span class="splash-engine-tag">POWERED BY ZYROX ENGINE • v3.5.0</span>
+      <span class="splash-engine-tag">LONG VIDEOS & MOVIES SUPPORTED • v3.8.0</span>
     </div>
   </div>
 
-  <!-- Android Phone Mockup Frame -->
+  <!-- Android Phone Frame -->
   <div class="app-frame" id="appFrame">
 
-    <!-- Android Status Bar -->
+    <!-- Real-Time Top Status Bar (Time, Day, Real-Time Net Speed & Battery) -->
     <div class="android-status-bar">
       <div class="status-left">
-        <span class="status-time" id="statusClock">09:41</span>
+        <span class="status-day" id="statusDay">Mon, Aug 24</span>
+        <span class="status-time" id="statusClock">09:41:00</span>
       </div>
       <div class="status-center">
         <div class="status-camera-notch"></div>
       </div>
       <div class="status-right">
-        <span class="status-icon">5G</span>
-        <span class="status-icon">📶</span>
-        <span class="status-icon">🔋 100%</span>
-      </div>
-    </div>
-
-    <!-- Heads-Up System Notification -->
-    <div id="systemNotification" class="system-notification hidden">
-      <div class="notif-icon">⚡</div>
-      <div class="notif-body">
-        <div class="notif-header">
-          <span class="notif-app-name">ARJUN RAJPUT Downloader</span>
-          <span class="notif-time">Just now</span>
-        </div>
-        <div class="notif-title" id="notifTitle">Downloading video...</div>
-        <div class="notif-progress-wrapper">
-          <div class="notif-progress-bar" id="notifProgressBar" style="width: 45%;"></div>
-        </div>
-        <div class="notif-footer" id="notifMetrics">⚡ 8.4 MB/s • 45% • ETA 00:08</div>
+        <span class="status-net-speed" id="statusNetSpeed">⚡ 15.2 MB/s</span>
+        <span class="status-net-type" id="statusNetType">5G</span>
+        <span class="status-battery" id="statusBattery">🔋 92%</span>
       </div>
     </div>
 
@@ -81,18 +62,12 @@
         <div class="app-avatar-icon">⚡</div>
         <div class="header-titles">
           <h1 class="header-brand">ARJUN RAJPUT</h1>
-          <p class="header-subtitle">All Video Downloader</p>
+          <p class="header-subtitle">All Video & Movie Downloader</p>
         </div>
       </div>
       <div class="header-actions">
-        <button id="soundToggleBtn" class="glass-icon-btn" title="Toggle Sound Effects">
+        <button id="soundToggleBtn" class="glass-icon-btn" title="Sound Effects">
           <span id="soundIcon">🔊</span>
-        </button>
-        <button id="searchTriggerBtn" class="glass-icon-btn" title="Global Search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
         </button>
         <button id="headerSettingsBtn" class="glass-icon-btn" title="Settings">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -103,152 +78,191 @@
       </div>
     </header>
 
+    <!-- Real-Time Metrics Strip (Live Internet Speed + Battery Status) -->
+    <div class="metrics-realtime-strip">
+      <div class="realtime-metric-box">
+        <span class="rt-icon">⚡</span>
+        <div>
+          <div class="rt-title">LIVE NET SPEED</div>
+          <div class="rt-value" id="rtLiveSpeed">18.4 MB/s</div>
+        </div>
+      </div>
+      <div class="realtime-metric-box">
+        <span class="rt-icon">🔋</span>
+        <div>
+          <div class="rt-title">BATTERY LEVEL</div>
+          <div class="rt-value" id="rtLiveBattery">92% Normal</div>
+        </div>
+      </div>
+      <div class="realtime-metric-box">
+        <span class="rt-icon">📅</span>
+        <div>
+          <div class="rt-title">DATE & DAY</div>
+          <div class="rt-value" id="rtLiveDay">Monday</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Screens Viewport -->
     <div class="screens-viewport">
 
       <!-- =====================================================================
-           VIEW 1: HOME SCREEN
+           VIEW 1: HOME SCREEN (3D Claymorphic Layout)
            ===================================================================== -->
       <section id="viewHome" class="screen-view active">
-        
-        <!-- Hero Glass Card -->
-        <div class="glass-hero-card">
-          <div class="hero-glow-accent"></div>
-          <div class="hero-badge-pill">
-            <span class="sparkle-anim">✨</span> AMOLED ULTRA HD • ZERO WATERMARK
+
+        <!-- Top 3D Brand Logo Disc -->
+        <div class="brand-top-badge-wrapper">
+          <div class="clay-brand-disc">
+            <span class="clay-lightning">⚡</span>
           </div>
-          <h2 class="hero-title">Download Videos Easily</h2>
-          <p class="hero-desc">Paste any video link and download in 1080p Full HD & 320kbps MP3 Audio.</p>
-          
-          <!-- Supported Platforms Glass Strip -->
-          <div class="ecosystem-strip">
-            <span class="eco-tag">📺 Bilibili</span>
-            <span class="eco-tag">🔴 YouTube</span>
-            <span class="eco-tag">📸 Instagram</span>
-            <span class="eco-tag">🎵 TikTok</span>
-            <span class="eco-tag">🐦 Twitter/X</span>
-            <span class="eco-tag">📘 Facebook</span>
-            <span class="eco-tag">📌 Pinterest</span>
-            <span class="eco-tag">🤖 Reddit</span>
+          <h2 class="brand-display-title">ARJUN RAJPUT</h2>
+          <div class="brand-tagline-row">
+            <span class="tag-word">Download. </span>
+            <span class="tag-word purple">Save. </span>
+            <span class="tag-word cyan">Enjoy.</span>
+          </div>
+          <p class="brand-sub-tag">Free videos &amp; full movies from your favorite platforms.<br>Fast, easy and 100% free.</p>
+        </div>
+
+        <!-- 3D Social Media Apps Row -->
+        <div class="clay-social-row">
+          <div class="clay-social-card" data-url="https://www.youtube.com/watch?v=KH2777NdFfo">
+            <span class="social-emoji">🔴</span>
+            <span class="social-name">YouTube</span>
+          </div>
+          <div class="clay-social-card" data-url="https://www.instagram.com/reel/C3_k6LpL0_p/">
+            <span class="social-emoji">📸</span>
+            <span class="social-name">Instagram</span>
+          </div>
+          <div class="clay-social-card" data-url="https://fb.watch/video/sample">
+            <span class="social-emoji">📘</span>
+            <span class="social-name">Facebook</span>
+          </div>
+          <div class="clay-social-card" data-url="https://www.tiktok.com/@marckinchen/video/7607173260282727710">
+            <span class="social-emoji">🎵</span>
+            <span class="social-name">TikTok</span>
+          </div>
+          <div class="clay-social-card" data-url="https://www.bilibili.com/video/BV1xx411c7mD">
+            <span class="social-emoji">📺</span>
+            <span class="social-name">Bilibili</span>
           </div>
         </div>
 
-        <!-- URL Input Glass Card with 3D Fetch & Paste Buttons -->
-        <div class="glass-input-card">
-          <div class="input-card-header">
-            <span class="input-card-title">Video Link</span>
-            <span id="detectedPlatformBadge" class="detected-badge hidden">Auto Detected</span>
+        <!-- 3D Tablet Window & Search Pill Card -->
+        <div class="clay-tablet-window">
+          <!-- Window 3-Dot Controls -->
+          <div class="window-dots-bar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="window-title">⚡ ARJUN RAJPUT • All-in-One Engine</span>
           </div>
-          <div class="input-box-wrapper">
-            <div class="input-icon-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-              </svg>
-            </div>
+
+          <h3 class="window-card-title">All-in-One Video &amp; Movie Downloader</h3>
+          <p class="window-card-sub">Paste any YouTube Song, Movie, TikTok, or Bilibili link.</p>
+
+          <!-- Input Box Pill with inside 3D Download Button -->
+          <div class="clay-search-pill">
+            <span class="pill-icon">🔗</span>
             <input 
               type="text" 
               id="mainUrlInput" 
-              class="amoled-input" 
-              placeholder="Paste video URL here..." 
+              class="pill-input" 
+              placeholder="Paste video or movie link here..." 
               autocomplete="off"
               spellcheck="false"
             />
-            <div class="input-btn-group">
-              <button id="clearUrlBtn" class="glass-btn-icon clear-btn hidden" title="Clear">✕</button>
-              <!-- 3D Paste Button -->
-              <button id="pasteUrlBtn" class="btn-3d-dark paste-btn">
-                <span>📋 Paste</span>
-              </button>
-            </div>
+            <button id="clearUrlBtn" class="pill-clear-btn hidden" title="Clear">✕</button>
+            <button id="pasteUrlBtn" class="pill-paste-btn">Paste</button>
+            <button id="fetchActionBtn" class="pill-download-btn">Download</button>
           </div>
 
-          <!-- 3D Fetch Button -->
-          <div style="margin-top: 14px;">
-            <button id="fetchActionBtn" class="btn-3d-cyan" style="width: 100%;">
-              <span class="btn-text">⚡ FETCH VIDEO FORMATS</span>
-            </button>
-          </div>
-
-          <!-- Quick Samples -->
-          <div class="sample-chips-row">
-            <span class="sample-label">Try Samples:</span>
-            <button class="sample-btn" data-url="https://www.bilibili.com/video/BV1xx411c7mD">📺 Bilibili</button>
-            <button class="sample-btn" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">🔴 YouTube</button>
-            <button class="sample-btn" data-url="https://www.tiktok.com/@marckinchen/video/7607173260282727710">🎵 TikTok</button>
+          <!-- 3 Highlights -->
+          <div class="window-features-row">
+            <span>⚡ Fast Downloads</span>
+            <span>🎦 HD 1080p Quality</span>
+            <span>✔ 100% Free Forever</span>
           </div>
         </div>
 
         <!-- Shimmer Loading -->
-        <div id="previewShimmer" class="glass-card shimmer-card hidden">
+        <div id="previewShimmer" class="clay-card shimmer-card hidden">
           <div class="shimmer-thumb"></div>
-          <div class="shimmer-content">
-            <div class="shimmer-line line-title"></div>
-            <div class="shimmer-line line-sub"></div>
-            <div class="shimmer-line line-meta"></div>
-          </div>
+          <div class="shimmer-line line-title"></div>
+          <div class="shimmer-line line-sub"></div>
         </div>
 
         <!-- =====================================================================
-             3. VIDEO PREVIEW CARD & 3D DOWNLOAD BUTTON
+             VIDEO PREVIEW CARD (Thumbnail, Length & Size)
              ===================================================================== -->
-        <div id="videoPreviewCard" class="glass-preview-card hidden">
-          <div class="preview-thumb-container">
-            <img id="previewImage" src="" alt="Thumbnail" class="preview-img">
-            <span id="previewDuration" class="preview-duration-badge">00:00</span>
-            <div class="preview-platform-chip" id="previewPlatformChip">⚡ Bilibili</div>
+        <div id="videoPreviewCard" class="clay-preview-card hidden">
+          <!-- Thumbnail with duration overlay -->
+          <div class="clay-thumb-box">
+            <img id="previewImage" src="" alt="Thumbnail" class="clay-thumb-img">
+            <span id="previewDuration" class="clay-duration-badge">⏳ Length: 34:15</span>
+            <span id="previewPlatformChip" class="clay-platform-badge">⚡ YouTube</span>
           </div>
-          <div class="preview-info-body">
-            <h3 id="previewTitle" class="preview-video-title">Video Title</h3>
-            <div class="preview-author-row">
-              <img id="previewAuthorAvatar" src="" alt="Author" class="author-avatar-img">
-              <div class="author-details">
-                <span id="previewAuthorName" class="author-name-text">Creator Name</span>
-                <span id="previewSourceMeta" class="source-meta-text">Verified • No Watermark</span>
-              </div>
-            </div>
-            <div class="preview-stats-bar">
-              <span id="previewViews" class="stat-pill">👁️ --</span>
-              <span id="previewLikes" class="stat-pill">❤️ --</span>
-              <span id="previewFormatStatus" class="stat-pill safe">✔ Ready</span>
+
+          <div class="clay-preview-body">
+            <h4 id="previewTitle" class="clay-video-title">Video Title</h4>
+            
+            <div class="clay-metrics-info-row">
+              <span id="previewAuthorName" class="author-tag">👤 Creator</span>
+              <span id="previewSizeBadge" class="size-tag">📦 Size: 94.1 MB</span>
+              <span class="safe-stream-tag">✔ Direct High-Speed</span>
             </div>
 
-            <!-- 3D Large CTA: DOWNLOAD NOW (with Sound & Depth Press) -->
-            <button id="openQualityModalBtn" class="btn-3d-cta">
-              <span class="cta-icon">⚡</span>
-              <span class="cta-text">DOWNLOAD NOW</span>
+            <!-- 3D Large CTA Button -->
+            <button id="openQualityModalBtn" class="btn-3d-cta" style="margin-top: 14px;">
+              <span class="cta-icon">⬇</span>
+              <span class="cta-text">CHOOSE QUALITY &amp; DOWNLOAD</span>
               <span class="cta-arrow">➔</span>
             </button>
           </div>
         </div>
 
-        <!-- Features Summary -->
-        <div class="features-summary-row">
-          <div class="feature-item-pill">
-            <span class="f-icon">🚫</span>
-            <span class="f-text">Zero Watermark</span>
+        <!-- 4 Claymorphic Feature Cards (Matching Reference Image) -->
+        <div class="clay-features-grid">
+          <div class="clay-feature-card">
+            <div class="cf-icon">🚀</div>
+            <h4>Fast &amp; Easy</h4>
+            <p>Download in just one click with live speed.</p>
           </div>
-          <div class="feature-item-pill">
-            <span class="f-icon">⚡</span>
-            <span class="f-text">Vercel Turbo Speed</span>
+          <div class="clay-feature-card">
+            <div class="cf-icon">🛡️</div>
+            <h4>Safe &amp; Secure</h4>
+            <p>No signup, no malware, zero watermark.</p>
           </div>
-          <div class="feature-item-pill">
-            <span class="f-icon">🎧</span>
-            <span class="f-text">320kbps MP3</span>
+          <div class="clay-feature-card">
+            <div class="cf-icon">🎦</div>
+            <h4>High Quality</h4>
+            <p>1080p Full HD &amp; 320kbps MP3 Audio.</p>
           </div>
+          <div class="clay-feature-card">
+            <div class="cf-icon">♾️</div>
+            <h4>Unlimited</h4>
+            <p>Download long movies &amp; songs as much as you want.</p>
+          </div>
+        </div>
+
+        <!-- Footer Tagline -->
+        <div class="clay-footer-tagline">
+          <span class="heart-icon">💜</span>
+          <span class="footer-tag-text">Free Forever. For Everyone.</span>
         </div>
 
       </section>
 
 
       <!-- =====================================================================
-           VIEW 2: DOWNLOADS SCREEN
+           VIEW 2: DOWNLOADS SCREEN (Real-Time Synchronized Progress & Lifecycle)
            ===================================================================== -->
       <section id="viewDownloads" class="screen-view">
         <div class="screen-header-row">
           <div>
             <h2 class="screen-title">Downloads</h2>
-            <p class="screen-desc" id="queueSummaryText">3 downloads • 1 active • 2 waiting</p>
+            <p class="screen-desc" id="queueSummaryText">Live active streams • Auto-resume on reload</p>
           </div>
           <div class="queue-controls-btn-group">
             <button id="pauseAllBtn" class="btn-3d-dark" style="padding: 6px 12px; font-size: 0.72rem;">⏸ Pause All</button>
@@ -256,12 +270,9 @@
           </div>
         </div>
 
-        <!-- Tabs -->
         <div class="segmented-tabs">
-          <button class="tab-pill active" data-tab="active">Active <span class="tab-count" id="countActive">1</span></button>
-          <button class="tab-pill" data-tab="completed">Completed <span class="tab-count" id="countCompleted">4</span></button>
-          <button class="tab-pill" data-tab="paused">Paused <span class="tab-count" id="countPaused">1</span></button>
-          <button class="tab-pill" data-tab="failed">Failed <span class="tab-count" id="countFailed">0</span></button>
+          <button class="tab-pill active" data-tab="active">Active <span class="tab-count" id="countActive">0</span></button>
+          <button class="tab-pill" data-tab="completed">Completed <span class="tab-count" id="countCompleted">1</span></button>
         </div>
 
         <div id="tabContentActive" class="tab-page active">
@@ -270,14 +281,6 @@
 
         <div id="tabContentCompleted" class="tab-page">
           <div class="downloads-list" id="completedDownloadsList"></div>
-        </div>
-
-        <div id="tabContentPaused" class="tab-page">
-          <div class="downloads-list" id="pausedDownloadsList"></div>
-        </div>
-
-        <div id="tabContentFailed" class="tab-page">
-          <div class="downloads-list" id="failedDownloadsList"></div>
         </div>
       </section>
 
@@ -289,9 +292,8 @@
         <div class="screen-header-row">
           <div>
             <h2 class="screen-title">Favorites</h2>
-            <p class="screen-desc">Quick shortcuts to frequently downloaded creators & channels</p>
+            <p class="screen-desc">Saved shortcuts to popular channels and movies</p>
           </div>
-          <button id="addFavoriteBtn" class="btn-3d-dark" style="padding: 6px 12px; font-size: 0.72rem;">+ Add Link</button>
         </div>
         <div class="favorites-grid" id="favoritesList"></div>
       </section>
@@ -302,18 +304,18 @@
            ===================================================================== -->
       <section id="viewSettings" class="screen-view">
         <h2 class="screen-title">Settings</h2>
-        <p class="screen-desc">Preferences, Storage & Branding Information</p>
+        <p class="screen-desc">Storage, Battery, Real-Time Net Speed &amp; Preferences</p>
 
-        <!-- Storage Widget -->
+        <!-- Storage Card -->
         <div class="storage-card">
           <div class="storage-card-header">
-            <span class="storage-title">Storage Used</span>
+            <span class="storage-title">Device Storage</span>
             <span class="storage-badge-free">51.6 GB Free</span>
           </div>
 
           <div class="storage-visual-row">
             <div class="circular-progress-container">
-              <svg class="circular-progress" width="100" height="100" viewBox="0 0 100 100">
+              <svg class="circular-progress" width="88" height="88" viewBox="0 0 100 100">
                 <circle class="circle-bg" cx="50" cy="50" r="42"></circle>
                 <circle class="circle-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="180"></circle>
               </svg>
@@ -324,95 +326,68 @@
             </div>
 
             <div class="storage-legend">
-              <div class="legend-item">
-                <span class="legend-dot cyan"></span>
-                <span class="legend-name">Videos</span>
-                <span class="legend-val">8.2 GB</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot purple"></span>
-                <span class="legend-name">Audio (MP3)</span>
-                <span class="legend-val">2.1 GB</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot yellow"></span>
-                <span class="legend-name">App Cache</span>
-                <span class="legend-val">2.1 GB</span>
-              </div>
+              <div class="legend-item"><span class="legend-dot cyan"></span><span class="legend-name">Movies &amp; Videos</span><span class="legend-val">8.2 GB</span></div>
+              <div class="legend-item"><span class="legend-dot purple"></span><span class="legend-name">MP3 Songs</span><span class="legend-val">2.1 GB</span></div>
+              <div class="legend-item"><span class="legend-dot yellow"></span><span class="legend-name">App Cache</span><span class="legend-val">2.1 GB</span></div>
             </div>
           </div>
 
           <div class="storage-actions-row">
-            <button id="changeFolderBtn" class="btn-3d-dark" style="flex:1;">📁 Change Folder</button>
-            <button id="clearCacheBtn" class="btn-3d-dark" style="flex:1; color: var(--neon-rose);">🗑️ Clear Cache</button>
+            <button id="clearCacheBtn" class="btn-3d-dark" style="flex:1; color: var(--neon-rose);">🗑️ Clear App Cache</button>
           </div>
         </div>
 
-        <!-- About Section -->
-        <div class="settings-group">
-          <div class="settings-group-title">ABOUT & BRANDING</div>
-          <div class="about-card">
-            <div class="about-header">
-              <div class="about-logo">⚡</div>
-              <div>
-                <h3 class="about-app-name">ARJUN RAJPUT</h3>
-                <p class="about-app-tag">All Video Downloader • v3.5.0</p>
-              </div>
+        <div class="about-card">
+          <div class="about-header">
+            <div class="about-logo">⚡</div>
+            <div>
+              <h3 class="about-app-name">ARJUN RAJPUT</h3>
+              <p class="about-app-tag">All Video &amp; Movie Downloader • v3.8.0</p>
             </div>
-            <p class="about-desc">
-              Engineered by <strong>ZYROX</strong> for ultra-fast, watermark-free media downloading across all social networks. 
-              Built with 3D Tactile Buttons + AMOLED Glassmorphism.
-            </p>
           </div>
+          <p class="about-desc">
+            Powered by <strong>ZYROX Engine</strong>. Supports large videos, full comedy/action movies, songs, reels, and stories with high-speed direct downloads.
+          </p>
         </div>
-
       </section>
 
     </div>
 
 
     <!-- =========================================================================
-         FLOATING GLASS BOTTOM NAVIGATION BAR
+         FLOATING CLAY BOTTOM NAVIGATION BAR
          ========================================================================= -->
     <nav class="floating-glass-nav">
       <button class="nav-item active" data-view="viewHome">
-        <div class="nav-icon-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
         <span class="nav-label">Home</span>
       </button>
 
       <button class="nav-item" data-view="viewDownloads">
-        <div class="nav-icon-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <span class="nav-badge" id="navDownloadsBadge">1</span>
-        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span class="nav-badge" id="navDownloadsBadge">0</span>
         <span class="nav-label">Downloads</span>
       </button>
 
       <button class="nav-item" data-view="viewFavorites">
-        <div class="nav-icon-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
         <span class="nav-label">Favorites</span>
       </button>
 
       <button class="nav-item" data-view="viewSettings">
-        <div class="nav-icon-wrap">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
         <span class="nav-label">Settings</span>
       </button>
     </nav>
@@ -420,7 +395,7 @@
   </div>
 
 
-  <!-- QUALITY SELECTION GLASS BOTTOM SHEET -->
+  <!-- QUALITY BOTTOM SHEET -->
   <div id="qualityBottomSheet" class="bottom-sheet-backdrop hidden">
     <div class="bottom-sheet-content">
       <div class="sheet-drag-handle"></div>
@@ -434,9 +409,8 @@
 
       <div class="quality-chips-grid" id="qualityOptionsGrid"></div>
 
-      <!-- 3D Start Download Button -->
       <button id="confirmDownloadBtn" class="btn-3d-cyan" style="width: 100%; padding: 14px 20px;">
-        <span>⬇ Start Download</span>
+        <span>⬇ Start High-Speed Download</span>
       </button>
     </div>
   </div>
@@ -462,28 +436,9 @@
 
       <div class="success-btn-row">
         <button id="successOpenFileBtn" class="btn-3d-emerald" style="flex:1;">▶ Open File</button>
-        <button id="successShareBtn" class="btn-3d-dark" style="flex:1;">↗ Share</button>
       </div>
 
       <button id="closeSuccessModalBtn" class="btn-modal-dismiss">Dismiss</button>
-    </div>
-  </div>
-
-
-  <!-- SEARCH OVERLAY -->
-  <div id="searchOverlay" class="search-overlay-backdrop hidden">
-    <div class="search-overlay-box">
-      <div class="search-input-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="text" id="globalSearchInput" placeholder="Search by title, format (MP4/MP3), resolution..." autofocus>
-        <button id="closeSearchBtn" class="sheet-close-btn">✕</button>
-      </div>
-      <div class="search-results-list" id="searchResultsList">
-        <div class="search-empty-hint">Type to search your downloaded videos and history...</div>
-      </div>
     </div>
   </div>
 
