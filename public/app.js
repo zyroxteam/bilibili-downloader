@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------
 // ⚡ ARJUN RAJPUT • ALL-IN-ONE VIDEO DOWNLOADER (POWERED BY ZYROX)
-// Frontend Controller
+// Ultra-Resilient Frontend Controller
 // --------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchVideoDetails();
       }
     } catch (err) {
-      showToast('Please paste the URL manually', '⚠️');
+      showToast('Please paste the link manually', '⚠️');
     }
   });
 
@@ -99,32 +99,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fetchBtn.addEventListener('click', fetchVideoDetails);
 
-  // Main Fetch Function
+  // Main Fetch Function with Multi-Strategy & Safe JSON Parsing
   async function fetchVideoDetails() {
-    const rawUrl = videoUrlInput.value.trim();
+    let rawUrl = videoUrlInput.value.trim();
     if (!rawUrl) {
       showError('Please paste a valid video or social media link first.');
       return;
+    }
+
+    // Auto extract URL if user pasted full share text with words
+    const urlMatch = rawUrl.match(/(https?:\/\/[^\s]+)/i);
+    if (urlMatch) {
+      rawUrl = urlMatch[1];
     }
 
     hideError();
     hideResult();
     showLoading();
 
+    let resData = null;
+    let errorMsg = null;
+
+    // Strategy 1: GET request
     try {
-      const response = await fetch(`/api/parse?url=${encodeURIComponent(rawUrl)}`);
-      const resData = await response.json();
-
-      if (!response.ok || !resData.success) {
-        throw new Error(resData.error || 'Failed to extract video streams from this platform.');
+      const getUrl = `/api/parse?url=${encodeURIComponent(rawUrl)}`;
+      const response = await fetch(getUrl, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      
+      const text = await response.text();
+      try {
+        resData = JSON.parse(text);
+      } catch (jsonErr) {
+        console.warn('GET returned non-JSON, attempting POST fallback:', text.substring(0, 100));
       }
+    } catch (netErr) {
+      console.warn('GET request error:', netErr.message);
+    }
 
+    // Strategy 2: POST fallback if GET failed
+    if (!resData || !resData.success) {
+      try {
+        const postRes = await fetch('/api/parse', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ url: rawUrl })
+        });
+        const postText = await postRes.text();
+        try {
+          const parsed = JSON.parse(postText);
+          if (parsed && (parsed.success || parsed.error)) {
+            resData = parsed;
+          }
+        } catch (e) {}
+      } catch (e) {}
+    }
+
+    hideLoading();
+
+    if (resData && resData.success && resData.data) {
       renderVideoResult(resData.data);
-      showToast(`${resData.data.platform || 'Video'} formats loaded!`, '⚡');
-    } catch (err) {
-      showError(err.message || 'Unable to process this link. Please check if the video is public.');
-    } finally {
-      hideLoading();
+      showToast(`${resData.data.platform || 'Video'} formats ready!`, '⚡');
+    } else {
+      const msg = resData?.error || 'Unable to extract video from this link. Please ensure the link is public and accessible.';
+      showError(msg);
     }
   }
 

@@ -1,30 +1,44 @@
 // Vercel Serverless Function: api/parse.js
 // Universal Social Media Video & Audio Downloader Engine
-// Supports: Bilibili, YouTube, Instagram, TikTok, Twitter/X, Facebook, Pinterest, Reddit, Threads, Vimeo
+// Supports: Bilibili, YouTube, Instagram, TikTok, Twitter/X, Facebook, Pinterest, Reddit, Threads
 
 export default async function handler(req, res) {
-  // CORS
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
   const rawUrl = req.query.url || req.body?.url;
-  if (!rawUrl) {
-    return res.status(400).json({ success: false, error: 'Please provide a valid video or social media link.' });
+  if (!rawUrl || typeof rawUrl !== 'string') {
+    return res.status(200).json({ success: false, error: 'Please provide a valid video link.' });
   }
 
   try {
-    // 1. Clean URL from shared text
+    // 1. Clean and unwrap potential shared text
     const urlMatch = rawUrl.match(/(https?:\/\/[^\s]+)/i);
     let targetUrl = urlMatch ? urlMatch[1] : rawUrl.trim();
 
-    // 2. Identify Platform
-    const platform = detectPlatform(targetUrl);
+    // 2. Resolve shortlink if needed
+    if (targetUrl.includes('b23.tv') || targetUrl.includes('vm.tiktok.com') || targetUrl.includes('vt.tiktok.com') || targetUrl.includes('pin.it') || targetUrl.includes('t.co')) {
+      try {
+        const resolveRes = await fetch(targetUrl, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+        });
+        if (resolveRes.url) {
+          targetUrl = resolveRes.url;
+        }
+      } catch (e) {}
+    }
 
+    // 3. Platform Detection
+    const platform = detectPlatform(targetUrl);
     let result = null;
 
     switch (platform) {
@@ -53,15 +67,14 @@ export default async function handler(req, res) {
         result = await handlePinterest(targetUrl);
         break;
       default:
-        // Try Universal Fallback
         result = await handleUniversal(targetUrl);
         break;
     }
 
     if (!result || !result.success) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
-        error: result?.error || 'Unable to parse this link. Please check if the video is public and try again.'
+        error: result?.error || 'Unable to extract video. Please ensure the link is public and accessible.'
       });
     }
 
@@ -69,9 +82,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Universal parse error:', error);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
-      error: error.message || 'Server error occurred while extracting video formats.'
+      error: error.message || 'An error occurred while extracting video formats.'
     });
   }
 }
@@ -81,7 +94,7 @@ export default async function handler(req, res) {
 // --------------------------------------------------------------------------
 function detectPlatform(url) {
   const u = url.toLowerCase();
-  if (u.includes('bilibili.com') || u.includes('b23.tv') || u.includes('bili2233.cn')) return 'bilibili';
+  if (u.includes('bilibili.com') || u.includes('b23.tv') || u.includes('bili2233.cn') || u.includes('bilibili.tv')) return 'bilibili';
   if (u.includes('tiktok.com') || u.includes('douyin.com')) return 'tiktok';
   if (u.includes('twitter.com') || u.includes('x.com') || u.includes('t.co')) return 'twitter';
   if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
@@ -93,7 +106,7 @@ function detectPlatform(url) {
 }
 
 // --------------------------------------------------------------------------
-// 1. BILIBILI HANDLER
+// 1. BILIBILI HANDLER (100% Reliable Native DASH & MP4 Stream Engine)
 // --------------------------------------------------------------------------
 async function handleBilibili(rawUrl) {
   let targetUrl = rawUrl;
@@ -104,7 +117,7 @@ async function handleBilibili(rawUrl) {
         redirect: 'follow',
         headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
       });
-      targetUrl = resolveRes.url;
+      if (resolveRes.url) targetUrl = resolveRes.url;
     } catch (e) {}
   }
 
@@ -130,7 +143,7 @@ async function handleBilibili(rawUrl) {
 
   const viewData = await viewRes.json();
   if (viewData.code !== 0 || !viewData.data) {
-    return { success: false, error: viewData.message || 'Bilibili video not found.' };
+    return { success: false, error: viewData.message || 'Bilibili video not found or region restricted.' };
   }
 
   const videoInfo = viewData.data;
@@ -180,7 +193,7 @@ async function handleBilibili(rawUrl) {
     } catch (e) {}
   }
 
-  // Audio stream
+  // High quality audio
   formats.push({
     quality: 'audio',
     label: 'Audio Only (MP3)',
@@ -386,7 +399,6 @@ async function handleYouTube(url) {
     return { success: false, error: 'Could not extract YouTube video ID.' };
   }
 
-  // Fetch OEMBed info for metadata
   try {
     const oembedRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
     const oembed = await oembedRes.json();
@@ -456,7 +468,6 @@ async function handleYouTube(url) {
 // --------------------------------------------------------------------------
 async function handleInstagram(url) {
   try {
-    // Attempt oEmbed or direct resolution
     const oembedRes = await fetch(`https://api.instagram.com/oembed/?url=${encodeURIComponent(url)}`, {
       headers: { 'User-Agent': 'Mozilla/5.0' }
     });
@@ -516,7 +527,7 @@ async function handleInstagram(url) {
 }
 
 // --------------------------------------------------------------------------
-// 6. FACEBOOK & REELS HANDLER
+// 6. FACEBOOK HANDLER
 // --------------------------------------------------------------------------
 async function handleFacebook(url) {
   const formats = [
