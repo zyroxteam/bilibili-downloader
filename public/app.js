@@ -1,25 +1,22 @@
 // --------------------------------------------------------------------------
 // ⚡ ARJUN RAJPUT – ALL VIDEO DOWNLOADER (POWERED BY ZYROX)
-// Real-Time Chunk Streaming Engine • Background Service Worker • 60FPS Smooth UI
+// Resumable Chunk Streaming Engine • Local Storage Persistence • Full Lifecycle
+// (Pause, Resume, Delete, Auto-Resume on Page Reload, 0ms Sound Synthesis)
 // --------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Register PWA Service Worker for Background Execution
+  // PWA Service Worker for Background Execution
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
 
-  // 2. Sound Synthesis Engine (0ms Latency)
+  // Sound Engine
   let soundEnabled = true;
   let audioCtx = null;
 
   function getAudioContext() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
     return audioCtx;
   }
 
@@ -32,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(750, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.05);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -93,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast(soundEnabled ? 'Button Sound Enabled' : 'Sound Muted', soundEnabled ? '🔊' : '🔇');
   });
 
-  // 3. Round Splash Screen Dismiss
+  // Splash Screen Dismiss
   const splashScreen = document.getElementById('splashScreen');
   setTimeout(() => {
     if (splashScreen) {
@@ -137,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.nav-item[data-view="viewSettings"]')?.click();
   });
 
-  // Views & UI Elements
+  // UI Elements
   const mainUrlInput = document.getElementById('mainUrlInput');
   const pasteUrlBtn = document.getElementById('pasteUrlBtn');
   const clearUrlBtn = document.getElementById('clearUrlBtn');
@@ -167,13 +164,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const successModal = document.getElementById('successModal');
   const closeSuccessModalBtn = document.getElementById('closeSuccessModalBtn');
 
-  // State
+  // Global In-Memory and Persistent State
   let currentVideoData = null;
   let selectedQualityItem = null;
-  const activeDownloads = [];
-  const completedDownloads = [
+
+  // In-Memory Chunks Cache for Active Streaming Downloads
+  const taskChunksMap = new Map();
+  const taskAbortControllers = new Map();
+
+  // Load Persisted Downloads from LocalStorage
+  let activeDownloads = loadFromStorage('zyrox_active_downloads', []);
+  let completedDownloads = loadFromStorage('zyrox_completed_downloads', [
     {
-      id: 'c_1',
+      id: 'c_default',
       title: 'TikTok Viral Video No Watermark',
       thumb: 'https://p16-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/okGflIWBcQGJZL5ISqZee2O9NX5cCjAhSTIDAI~tplv-tiktokx-cropcenter-q:300:400:q70.jpeg',
       platform: 'TikTok',
@@ -182,11 +185,53 @@ document.addEventListener('DOMContentLoaded', () => {
       size: '18.4 MB',
       date: 'Today, 09:20'
     }
-  ];
+  ]);
 
   renderDownloads();
 
-  // URL Input
+  // Auto-Resume Active Downloads after page reload/refresh
+  if (activeDownloads.length > 0) {
+    activeDownloads.forEach(task => {
+      if (task.status === 'active') {
+        executeResumableStreamDownload(task, true);
+      }
+    });
+  }
+
+  function saveStorage() {
+    try {
+      // Serialize tasks without non-serializable objects
+      const cleanActive = activeDownloads.map(t => ({
+        id: t.id,
+        title: t.title,
+        thumb: t.thumb,
+        platform: t.platform,
+        quality: t.quality,
+        format: t.format,
+        size: t.size,
+        downloadUrl: t.downloadUrl,
+        progress: t.progress,
+        speed: t.speed,
+        eta: t.eta,
+        status: t.status,
+        receivedBytes: t.receivedBytes || 0,
+        totalBytes: t.totalBytes || 0
+      }));
+      localStorage.setItem('zyrox_active_downloads', JSON.stringify(cleanActive));
+      localStorage.setItem('zyrox_completed_downloads', JSON.stringify(completedDownloads));
+    } catch (e) {}
+  }
+
+  function loadFromStorage(key, fallback) {
+    try {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  // URL Input Handlers
   mainUrlInput?.addEventListener('input', () => {
     const val = mainUrlInput.value.trim();
     if (val.length > 0) {
@@ -199,9 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   mainUrlInput?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      fetchVideoInfo(mainUrlInput.value.trim());
-    }
+    if (e.key === 'Enter') fetchVideoInfo(mainUrlInput.value.trim());
   });
 
   clearUrlBtn?.addEventListener('click', () => {
@@ -266,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 4. Video Info Extractor
+  // Fetch Video Info via API
   async function fetchVideoInfo(url) {
     previewShimmer?.classList.remove('hidden');
     videoPreviewCard?.classList.add('hidden');
@@ -348,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------------------------
-  // 5. REAL CHUNK STREAMING DOWNLOAD ENGINE (Background & Large File Support)
+  // RESUMABLE CHUNK STREAMING & FULL DOWNLOAD LIFECYCLE (Pause, Resume, Delete)
   // --------------------------------------------------------------------------
   confirmDownloadBtn?.addEventListener('click', () => {
     qualityBottomSheet.classList.add('hidden');
@@ -372,37 +415,57 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     activeDownloads.unshift(downloadTask);
+    saveStorage();
     renderDownloads();
 
     showSystemNotification(downloadTask.title);
     document.querySelector('.nav-item[data-view="viewDownloads"]')?.click();
     showToast('Download started with real-time stream 🚀', '⬇️');
 
-    // Execute Real Streaming in Background
-    executeRealStreamDownload(downloadTask);
+    executeResumableStreamDownload(downloadTask, false);
   });
 
-  async function executeRealStreamDownload(task) {
+  async function executeResumableStreamDownload(task, isResuming = false) {
     const startTime = Date.now();
     const safeTitle = (task.title || 'Video').replace(/[/\\?%*:|"<>]/g, '_').substring(0, 60);
     const fileName = `[ARJUN_RAJPUT]_${safeTitle}.${task.format.toLowerCase()}`;
 
+    // AbortController for Pause / Cancel support
+    const controller = new AbortController();
+    taskAbortControllers.set(task.id, controller);
+
+    if (!taskChunksMap.has(task.id)) {
+      taskChunksMap.set(task.id, []);
+    }
+    const chunks = taskChunksMap.get(task.id);
+    let receivedBytes = task.receivedBytes || 0;
+
+    task.status = 'active';
+    saveStorage();
+    renderDownloads();
+
     try {
+      const headers = { 'Accept': '*/*' };
+      // Resumption with HTTP Range header if resuming from a byte offset
+      if (receivedBytes > 0) {
+        headers['Range'] = `bytes=${receivedBytes}-`;
+      }
+
       const response = await fetch(task.downloadUrl, {
-        headers: { 'Accept': '*/*' }
+        headers,
+        signal: controller.signal
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
+      if (!response.ok && response.status !== 206) {
+        throw new Error(`HTTP ${response.status}`);
       }
 
       const contentLength = response.headers.get('content-length');
-      const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
-      task.totalBytes = totalBytes;
+      if (contentLength && (!task.totalBytes || task.totalBytes === 0)) {
+        task.totalBytes = parseInt(contentLength, 10) + receivedBytes;
+      }
 
       const reader = response.body.getReader();
-      const chunks = [];
-      let receivedBytes = 0;
       let lastUIUpdate = 0;
 
       while (true) {
@@ -414,25 +477,27 @@ document.addEventListener('DOMContentLoaded', () => {
         task.receivedBytes = receivedBytes;
 
         const now = Date.now();
-        // Update UI throttled to 10fps for silky smooth performance
+        // Update at 10fps for zero-lag silky smooth UI
         if (now - lastUIUpdate > 100) {
           lastUIUpdate = now;
           const elapsedSec = Math.max(0.1, (now - startTime) / 1000);
-          const speedMB = (receivedBytes / (1024 * 1024)) / elapsedSec;
-          const pct = totalBytes > 0 ? Math.min(99, Math.floor((receivedBytes / totalBytes) * 100)) : Math.min(99, Math.floor(receivedBytes / (1024 * 1024 * 1.5)));
+          const speedMB = ((receivedBytes - (isResuming ? 0 : 0)) / (1024 * 1024)) / elapsedSec;
+          const totalBytes = task.totalBytes || (receivedBytes * 1.3);
+          const pct = Math.min(99, Math.floor((receivedBytes / totalBytes) * 100));
           const remainingBytes = Math.max(0, totalBytes - receivedBytes);
           const etaSec = (speedMB > 0 && remainingBytes > 0) ? Math.floor((remainingBytes / (1024 * 1024)) / speedMB) : 0;
 
           task.progress = pct;
           task.speed = `${speedMB.toFixed(1)} MB/s`;
-          task.eta = totalBytes > 0 ? `00:${String(etaSec).padStart(2, '0')}` : 'Streaming...';
+          task.eta = task.totalBytes > 0 ? `00:${String(etaSec).padStart(2, '0')}` : 'Streaming...';
 
           updateDownloadCardUI(task);
           updateSystemNotification(task.speed, pct, task.eta);
+          saveStorage();
         }
       }
 
-      // Download 100% Finished - Assemble Blob and Save Directly
+      // Download Finished
       task.progress = 100;
       task.status = 'completed';
       updateDownloadCardUI(task);
@@ -448,11 +513,12 @@ document.addEventListener('DOMContentLoaded', () => {
       downloadLink.click();
       document.body.removeChild(downloadLink);
 
-      // Clean up after 1 minute
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      // Clean up in-memory chunks
+      taskChunksMap.delete(task.id);
+      taskAbortControllers.delete(task.id);
 
-      // Move from active to completed list
-      const idx = activeDownloads.indexOf(task);
+      // Move to completed
+      const idx = activeDownloads.findIndex(t => t.id === task.id);
       if (idx !== -1) activeDownloads.splice(idx, 1);
 
       completedDownloads.unshift({
@@ -466,19 +532,83 @@ document.addEventListener('DOMContentLoaded', () => {
         date: 'Just now'
       });
 
+      saveStorage();
       renderDownloads();
       playSuccessSound();
       showSuccessCelebration(task);
 
     } catch (err) {
-      console.warn('Direct stream fallback:', err);
-      // Fallback for massive files: Direct browser redirect download
-      window.open(task.downloadUrl, '_blank');
-      task.status = 'completed';
-      task.progress = 100;
-      renderDownloads();
+      if (err.name === 'AbortError') {
+        // Paused by user
+        task.status = 'paused';
+        task.speed = 'Paused';
+        updateDownloadCardUI(task);
+        saveStorage();
+      } else {
+        console.warn('Stream interrupted, fallback direct download:', err);
+        // Fallback for massive files: direct browser download
+        window.open(task.downloadUrl, '_blank');
+        task.status = 'completed';
+        task.progress = 100;
+        saveStorage();
+        renderDownloads();
+      }
     }
   }
+
+  // Pause Action
+  window.pauseDownload = function(taskId) {
+    const task = activeDownloads.find(t => t.id === taskId);
+    if (!task) return;
+    const controller = taskAbortControllers.get(taskId);
+    if (controller) {
+      controller.abort();
+    }
+    task.status = 'paused';
+    task.speed = 'Paused';
+    saveStorage();
+    renderDownloads();
+    showToast('Download Paused ⏸', '⏸');
+  };
+
+  // Resume Action
+  window.resumeDownload = function(taskId) {
+    const task = activeDownloads.find(t => t.id === taskId);
+    if (!task) return;
+    showToast('Resuming download from byte offset 🚀', '▶');
+    executeResumableStreamDownload(task, true);
+  };
+
+  // Delete Action
+  window.deleteDownload = function(taskId) {
+    const controller = taskAbortControllers.get(taskId);
+    if (controller) controller.abort();
+    taskChunksMap.delete(taskId);
+    taskAbortControllers.delete(taskId);
+
+    const aIdx = activeDownloads.findIndex(t => t.id === taskId);
+    if (aIdx !== -1) activeDownloads.splice(aIdx, 1);
+
+    const cIdx = completedDownloads.findIndex(t => t.id === taskId);
+    if (cIdx !== -1) completedDownloads.splice(cIdx, 1);
+
+    saveStorage();
+    renderDownloads();
+    showToast('Download deleted', '🗑️');
+  };
+
+  // Pause All & Resume All Controls
+  document.getElementById('pauseAllBtn')?.addEventListener('click', () => {
+    activeDownloads.forEach(t => {
+      if (t.status === 'active') window.pauseDownload(t.id);
+    });
+  });
+
+  document.getElementById('resumeAllBtn')?.addEventListener('click', () => {
+    activeDownloads.forEach(t => {
+      if (t.status === 'paused') window.resumeDownload(t.id);
+    });
+  });
 
   function updateDownloadCardUI(task) {
     const card = document.querySelector(`.download-card[data-id="${task.id}"]`);
@@ -550,8 +680,10 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="dl-speed-text">⚡ ${d.speed} • ${d.progress}%</span>
               <span class="dl-eta-text">⏳ ETA ${d.eta}</span>
               <div class="dl-actions-group">
-                <button class="dl-icon-btn" title="Pause">⏸</button>
-                <button class="dl-icon-btn" title="Cancel">✕</button>
+                ${d.status === 'active' 
+                  ? `<button class="dl-action-btn" onclick="pauseDownload('${d.id}')">⏸ Pause</button>` 
+                  : `<button class="dl-action-btn resume" onclick="resumeDownload('${d.id}')">▶ Resume</button>`}
+                <button class="dl-action-btn danger" onclick="deleteDownload('${d.id}')">🗑️ Delete</button>
               </div>
             </div>
           </div>
@@ -578,9 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span style="color: var(--neon-emerald); font-weight: 700;">✔ Completed</span>
             <span style="color: var(--text-muted);">${c.date}</span>
             <div class="dl-actions-group">
-              <button class="dl-icon-btn" title="Open">▶</button>
-              <button class="dl-icon-btn" title="Share">↗</button>
-              <button class="dl-icon-btn" title="Delete">🗑️</button>
+              <button class="dl-action-btn resume" onclick="deleteDownload('${c.id}')">🗑️ Delete</button>
             </div>
           </div>
         </div>
@@ -601,7 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // System Notification Simulation
+  // System Notification
   const sysNotif = document.getElementById('systemNotification');
   const notifTitle = document.getElementById('notifTitle');
   const notifProgressBar = document.getElementById('notifProgressBar');
