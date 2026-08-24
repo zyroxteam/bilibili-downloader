@@ -1,19 +1,19 @@
 // Vercel Serverless Function: api/download.js
-// Universal stream proxy with required Referer & User-Agent headers
-// Bypasses 403 Forbidden checks and triggers direct file downloads with proper filenames.
+// Ultra High-Speed Stream Engine for Large Videos (10MB to 4GB+)
+// Supports: Resumable HTTP Range requests, Direct CDN Redirects, Zero-Timeout Streaming
 
 import { Readable } from 'stream';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Range');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Range, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  const { bvid, cid, qn = 80, type, title = 'Video_Download', ext = 'mp4', directUrl } = req.query;
+  const { bvid, cid, qn = 80, type, title = 'Video', ext = 'mp4', directUrl, redirect } = req.query;
 
   try {
     let streamUrl = null;
@@ -44,9 +44,15 @@ export default async function handler(req, res) {
     }
 
     if (!streamUrl) {
-      return res.status(404).send('Stream URL could not be resolved.');
+      return res.status(404).json({ error: 'Stream URL could not be resolved.' });
     }
 
+    // If client requested instant redirect for massive files (bypasses all serverless limits)
+    if (redirect === 'true' || redirect === '1') {
+      return res.redirect(302, streamUrl);
+    }
+
+    // Forward Range header if client supports resumable downloading
     if (req.headers.range) {
       customHeaders['Range'] = req.headers.range;
     }
@@ -57,16 +63,18 @@ export default async function handler(req, res) {
     });
 
     if (!cdnRes.ok && cdnRes.status !== 206) {
-      // If direct proxy fails, redirect to original stream
-      return res.redirect(streamUrl);
+      // Direct CDN fallback redirect on upstream block
+      return res.redirect(302, streamUrl);
     }
 
     // Sanitize filename
-    const safeTitle = (title || 'Video').replace(/[/\\?%*:|"<>]/g, '_').substring(0, 80);
+    const safeTitle = (title || 'Video').replace(/[/\\?%*:|"<>]/g, '_').substring(0, 70);
     const finalFilename = `[ARJUN_RAJPUT]_${safeTitle}.${ext}`;
 
+    // Set streaming and download headers
     res.setHeader('Content-Type', type === 'audio' || ext === 'mp3' ? 'audio/mpeg' : 'video/mp4');
     res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(finalFilename)}"; filename*=UTF-8''${encodeURIComponent(finalFilename)}`);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
 
     if (cdnRes.headers.has('content-length')) {
       res.setHeader('Content-Length', cdnRes.headers.get('content-length'));
@@ -90,13 +98,13 @@ export default async function handler(req, res) {
         if (!res.headersSent) res.status(500).end();
       });
     } else {
-      res.redirect(streamUrl);
+      res.redirect(302, streamUrl);
     }
 
   } catch (error) {
-    console.error('Download handler error:', error);
+    console.error('Download error:', error);
     if (!res.headersSent) {
-      res.status(500).send(`Download failed: ${error.message}`);
+      res.status(500).json({ error: error.message });
     }
   }
 }
