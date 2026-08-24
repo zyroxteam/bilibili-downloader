@@ -2,338 +2,602 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All-In-One Video Downloader • ARJUN RAJPUT (MADE BY ZYROX)</title>
-  <meta name="description" content="Download Videos from Bilibili, YouTube, Instagram Reels, TikTok, Twitter/X, Facebook, Reddit & Pinterest in 1080p Full HD & MP3. Created by Arjun Rajput, Powered by ZYROX.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ARJUN RAJPUT – All Video Downloader</title>
+  <meta name="description" content="Production-Quality AMOLED Glassmorphism Video & Audio Downloader Android App Concept. Created by Arjun Rajput, Powered by ZYROX.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <!-- Ambient Background Glows -->
-  <div class="glow-orb orb-1"></div>
-  <div class="glow-orb orb-2"></div>
-  <div class="glow-orb orb-3"></div>
+<body class="theme-amoled">
 
-  <!-- Header / Navigation -->
-  <header class="navbar">
-    <div class="nav-container">
-      <div class="brand">
-        <div class="brand-icon">⚡</div>
-        <div class="brand-text">
-          <span class="brand-name">ARJUN RAJPUT</span>
-          <span class="brand-badge">MADE BY ZYROX</span>
+  <!-- Particle Background Canvas for Splash & Celebrations -->
+  <canvas id="ambientCanvas" class="ambient-canvas"></canvas>
+
+  <!-- Ambient AMOLED Neon Glow Orbs -->
+  <div class="glow-orb orb-cyan"></div>
+  <div class="glow-orb orb-purple"></div>
+  <div class="glow-orb orb-emerald"></div>
+
+  <!-- =========================================================================
+       1. SPLASH SCREEN (Animated Glass Logo + Rotating Neon Ring)
+       ========================================================================= -->
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo-wrapper">
+        <div class="neon-ring"></div>
+        <div class="glass-circle-logo">
+          <div class="glass-reflection"></div>
+          <div class="logo-inner-text">
+            <span class="logo-icon-lightning">⚡</span>
+            <span class="logo-brand-title">ARJUN RAJPUT</span>
+            <span class="logo-brand-sub">ALL VIDEO DOWNLOADER</span>
+          </div>
         </div>
       </div>
-      <nav class="nav-links">
-        <a href="#downloader" class="nav-link active">Downloader</a>
-        <a href="#platforms" class="nav-link">Supported Apps</a>
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-      </nav>
-      <div class="nav-action">
-        <span class="status-pill"><span class="status-dot"></span> Vercel Cloud Active</span>
+      <div class="splash-loader-bar">
+        <div class="splash-loader-progress"></div>
+      </div>
+      <span class="splash-engine-tag">POWERED BY ZYROX ENGINE • v3.5.0</span>
+    </div>
+  </div>
+
+  <!-- Android Phone Mockup Container / Responsive Frame -->
+  <div class="app-frame" id="appFrame">
+
+    <!-- Android Simulated Status Bar -->
+    <div class="android-status-bar">
+      <div class="status-left">
+        <span class="status-time" id="statusClock">09:41</span>
+      </div>
+      <div class="status-center">
+        <div class="status-camera-notch"></div>
+      </div>
+      <div class="status-right">
+        <span class="status-icon">5G</span>
+        <span class="status-icon">📶</span>
+        <span class="status-icon">🔋 100%</span>
       </div>
     </div>
-  </header>
 
-  <!-- Main Hero & Downloader Section -->
-  <main class="main-container">
-    <section class="hero-section" id="downloader">
-      <div class="hero-badge">
-        <span class="badge-sparkle">✨</span>
-        <span>All-In-One Video & Audio Downloader Engine</span>
+    <!-- Android In-App Heads-Up Notification Banner (Simulated) -->
+    <div id="systemNotification" class="system-notification hidden">
+      <div class="notif-icon">⚡</div>
+      <div class="notif-body">
+        <div class="notif-header">
+          <span class="notif-app-name">ARJUN RAJPUT Downloader</span>
+          <span class="notif-time">Just now</span>
+        </div>
+        <div class="notif-title" id="notifTitle">Downloading video...</div>
+        <div class="notif-progress-wrapper">
+          <div class="notif-progress-bar" id="notifProgressBar" style="width: 45%;"></div>
+        </div>
+        <div class="notif-footer" id="notifMetrics">⚡ 8.4 MB/s • 45% • ETA 00:08</div>
       </div>
-      <h1 class="hero-title">
-        Download Videos From <br>
-        <span class="gradient-text">Any Social Platform</span>
-      </h1>
-      <p class="hero-subtitle">
-        Download videos, reels, stories, and MP3 audio from <strong>Bilibili, YouTube, Instagram, TikTok, Twitter/X, Facebook, Reddit & Pinterest</strong> in <strong>Ultra HD (1080p, 720p, 480p)</strong> with zero watermark.
-      </p>
+    </div>
 
-      <!-- Supported Platforms Interactive Bar -->
-      <div class="platforms-bar" id="platforms">
-        <span class="platform-bar-title">Supported Apps:</span>
-        <div class="platform-chips-scroll">
-          <div class="platform-chip active" data-platform="all">
-            <span class="chip-icon">⚡</span>
-            <span>All Apps (Auto)</span>
-          </div>
-          <div class="platform-chip" data-platform="bilibili">
-            <span class="chip-icon">📺</span>
-            <span>Bilibili</span>
-          </div>
-          <div class="platform-chip" data-platform="youtube">
-            <span class="chip-icon">🔴</span>
-            <span>YouTube & Shorts</span>
-          </div>
-          <div class="platform-chip" data-platform="instagram">
-            <span class="chip-icon">📸</span>
-            <span>Instagram & Reels</span>
-          </div>
-          <div class="platform-chip" data-platform="tiktok">
-            <span class="chip-icon">🎵</span>
-            <span>TikTok (No-WM)</span>
-          </div>
-          <div class="platform-chip" data-platform="twitter">
-            <span class="chip-icon">🐦</span>
-            <span>Twitter / X</span>
-          </div>
-          <div class="platform-chip" data-platform="facebook">
-            <span class="chip-icon">📘</span>
-            <span>Facebook</span>
-          </div>
-          <div class="platform-chip" data-platform="reddit">
-            <span class="chip-icon">🤖</span>
-            <span>Reddit</span>
-          </div>
-          <div class="platform-chip" data-platform="pinterest">
-            <span class="chip-icon">📌</span>
-            <span>Pinterest</span>
-          </div>
+    <!-- Top App Bar -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="app-avatar-icon">⚡</div>
+        <div class="header-titles">
+          <h1 class="header-brand">ARJUN RAJPUT</h1>
+          <p class="header-subtitle">All Video Downloader</p>
         </div>
       </div>
+      <div class="header-actions">
+        <button id="searchTriggerBtn" class="glass-icon-btn" title="Global Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button id="notifTriggerBtn" class="glass-icon-btn" title="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="notif-badge-dot"></span>
+        </button>
+        <button id="headerSettingsBtn" class="glass-icon-btn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
 
-      <!-- Search Input Box -->
-      <div class="search-wrapper">
-        <div class="search-box">
-          <div class="input-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-            </svg>
+    <!-- Main Screens Container (View Switcher) -->
+    <div class="screens-viewport">
+
+      <!-- =====================================================================
+           VIEW 1: HOME SCREEN
+           ===================================================================== -->
+      <section id="viewHome" class="screen-view active">
+        
+        <!-- Hero Glass Card -->
+        <div class="glass-hero-card">
+          <div class="hero-glow-accent"></div>
+          <div class="hero-badge-pill">
+            <span class="sparkle-anim">✨</span> AMOLED ULTRA HD • NO WATERMARK
           </div>
-          <input 
-            type="text" 
-            id="videoUrlInput" 
-            placeholder="Paste any video link here (Bilibili, Instagram, YouTube, TikTok, X, FB)..." 
-            autocomplete="off"
-            spellcheck="false"
-          >
-          <div class="input-actions">
-            <button id="pasteBtn" class="action-btn" title="Paste from clipboard">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          <h2 class="hero-title">Download Videos Easily</h2>
+          <p class="hero-desc">Paste any supported video URL and choose your preferred download resolution.</p>
+          
+          <!-- Supported Platforms Glass Chips -->
+          <div class="ecosystem-strip">
+            <span class="eco-tag">📺 Bilibili</span>
+            <span class="eco-tag">🔴 YouTube</span>
+            <span class="eco-tag">📸 Instagram</span>
+            <span class="eco-tag">🎵 TikTok</span>
+            <span class="eco-tag">🐦 X / Twitter</span>
+            <span class="eco-tag">📘 Facebook</span>
+            <span class="eco-tag">📌 Pinterest</span>
+            <span class="eco-tag">🤖 Reddit</span>
+          </div>
+        </div>
+
+        <!-- URL Input Glass Card -->
+        <div class="glass-input-card">
+          <div class="input-card-header">
+            <span class="input-card-title">Video Link</span>
+            <span id="detectedPlatformBadge" class="detected-badge hidden">Auto Detected</span>
+          </div>
+          <div class="input-box-wrapper">
+            <div class="input-icon-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
               </svg>
-              <span>Paste</span>
+            </div>
+            <input 
+              type="text" 
+              id="mainUrlInput" 
+              class="amoled-input" 
+              placeholder="Paste video URL here..." 
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="input-btn-group">
+              <button id="clearUrlBtn" class="glass-btn-icon clear-btn hidden" title="Clear">✕</button>
+              <button id="pasteUrlBtn" class="glass-btn-pill paste-btn">
+                <span>📋 Paste</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Samples -->
+          <div class="sample-chips-row">
+            <span class="sample-label">Quick Samples:</span>
+            <button class="sample-btn" data-url="https://www.bilibili.com/video/BV1xx411c7mD">📺 Bilibili</button>
+            <button class="sample-btn" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">🔴 YouTube</button>
+            <button class="sample-btn" data-url="https://www.tiktok.com/@marckinchen/video/7607173260282727710">🎵 TikTok</button>
+          </div>
+        </div>
+
+        <!-- Animated Loading Shimmer Card (Hidden by default) -->
+        <div id="previewShimmer" class="glass-card shimmer-card hidden">
+          <div class="shimmer-thumb"></div>
+          <div class="shimmer-content">
+            <div class="shimmer-line line-title"></div>
+            <div class="shimmer-line line-sub"></div>
+            <div class="shimmer-line line-meta"></div>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             3. VIDEO PREVIEW CARD
+             ===================================================================== -->
+        <div id="videoPreviewCard" class="glass-preview-card hidden">
+          <div class="preview-thumb-container">
+            <img id="previewImage" src="" alt="Thumbnail" class="preview-img">
+            <span id="previewDuration" class="preview-duration-badge">00:00</span>
+            <div class="preview-platform-chip" id="previewPlatformChip">⚡ Bilibili</div>
+          </div>
+          <div class="preview-info-body">
+            <h3 id="previewTitle" class="preview-video-title">Video Title</h3>
+            <div class="preview-author-row">
+              <img id="previewAuthorAvatar" src="" alt="Author" class="author-avatar-img">
+              <div class="author-details">
+                <span id="previewAuthorName" class="author-name-text">Creator Name</span>
+                <span id="previewSourceMeta" class="source-meta-text">Verified • No Watermark</span>
+              </div>
+            </div>
+            <div class="preview-stats-bar">
+              <span id="previewViews" class="stat-pill">👁️ --</span>
+              <span id="previewLikes" class="stat-pill">❤️ --</span>
+              <span id="previewFormatStatus" class="stat-pill safe">✔ Ready</span>
+            </div>
+
+            <!-- Large Animated CTA: DOWNLOAD NOW -->
+            <button id="openQualityModalBtn" class="cta-download-btn">
+              <span class="cta-btn-ripple"></span>
+              <span class="cta-icon">⚡</span>
+              <span class="cta-text">DOWNLOAD NOW</span>
+              <span class="cta-arrow">➔</span>
             </button>
-            <button id="clearBtn" class="action-btn clear-btn hidden" title="Clear input">✕</button>
-          </div>
-          <button id="fetchBtn" class="btn-primary">
-            <span class="btn-text">Get Video Formats</span>
-            <span class="btn-icon">⚡</span>
-            <div class="spinner hidden"></div>
-          </button>
-        </div>
-
-        <!-- Quick Demo Examples -->
-        <div class="quick-examples">
-          <span class="examples-label">Try Samples:</span>
-          <button class="example-chip" data-url="https://www.bilibili.com/video/BV1xx411c7mD">📺 Bilibili Anime</button>
-          <button class="example-chip" data-url="https://www.tiktok.com/@tiktok/video/7106594312292453678">🎵 TikTok Reel</button>
-          <button class="example-chip" data-url="https://twitter.com/Twitter/status/1500000000000000000">🐦 Twitter/X Video</button>
-          <button class="example-chip" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">🔴 YouTube Video</button>
-        </div>
-      </div>
-
-      <!-- Error Alert Box -->
-      <div id="errorAlert" class="error-card hidden">
-        <div class="error-icon">⚠️</div>
-        <div class="error-content">
-          <h4 id="errorTitle">Unable to fetch media</h4>
-          <p id="errorMessage">Please check the link and ensure the video is public.</p>
-        </div>
-      </div>
-
-      <!-- Loading Skeleton Screen -->
-      <div id="loadingSkeleton" class="skeleton-card hidden">
-        <div class="skeleton-media"></div>
-        <div class="skeleton-details">
-          <div class="skeleton-line full"></div>
-          <div class="skeleton-line half"></div>
-          <div class="skeleton-line quarter"></div>
-          <div class="skeleton-grid">
-            <div class="skeleton-box"></div>
-            <div class="skeleton-box"></div>
-            <div class="skeleton-box"></div>
           </div>
         </div>
-      </div>
 
-      <!-- Result Card -->
-      <div id="resultCard" class="result-card hidden">
-        <div class="result-header">
-          <div class="media-preview-container">
-            <img id="videoThumb" src="" alt="Thumbnail" class="media-thumb">
-            <span id="videoDuration" class="duration-badge">00:00</span>
+        <!-- Quick Features Highlights -->
+        <div class="features-summary-row">
+          <div class="feature-item-pill">
+            <span class="f-icon">🚫</span>
+            <span class="f-text">Zero Watermark</span>
           </div>
-          <div class="media-meta">
-            <div class="meta-badges">
-              <span id="platformBadge" class="badge-tag platform-tag">⚡ All-in-One</span>
-              <span class="badge-tag safe-tag">✔ No Watermark Clean Stream</span>
-            </div>
-            <h2 id="videoTitle" class="video-title">Video Title</h2>
-            <div class="author-row">
-              <img id="authorAvatar" src="" alt="Author" class="author-avatar">
-              <div class="author-info">
-                <span id="authorName" class="author-name">Creator</span>
-                <span id="videoMetaExtra" class="pub-date">Public Media</span>
+          <div class="feature-item-pill">
+            <span class="f-icon">⚡</span>
+            <span class="f-text">Vercel Turbo Speed</span>
+          </div>
+          <div class="feature-item-pill">
+            <span class="f-icon">🎧</span>
+            <span class="f-text">320kbps MP3</span>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 2: DOWNLOADS SCREEN (Download Manager & Queue System)
+           ===================================================================== -->
+      <section id="viewDownloads" class="screen-view">
+        <div class="screen-header-row">
+          <div>
+            <h2 class="screen-title">Downloads</h2>
+            <p class="screen-desc" id="queueSummaryText">3 downloads • 1 active • 2 waiting</p>
+          </div>
+          <div class="queue-controls-btn-group">
+            <button id="pauseAllBtn" class="glass-action-btn small" title="Pause All">⏸ Pause All</button>
+            <button id="resumeAllBtn" class="glass-action-btn small" title="Resume All">▶ Resume All</button>
+          </div>
+        </div>
+
+        <!-- Download Tabs: Active | Completed | Paused | Failed -->
+        <div class="segmented-tabs">
+          <button class="tab-pill active" data-tab="active">Active <span class="tab-count" id="countActive">1</span></button>
+          <button class="tab-pill" data-tab="completed">Completed <span class="tab-count" id="countCompleted">4</span></button>
+          <button class="tab-pill" data-tab="paused">Paused <span class="tab-count" id="countPaused">1</span></button>
+          <button class="tab-pill" data-tab="failed">Failed <span class="tab-count" id="countFailed">0</span></button>
+        </div>
+
+        <!-- Tab Content: Active & Queue List -->
+        <div id="tabContentActive" class="tab-page active">
+          <div class="downloads-list" id="activeDownloadsList">
+            <!-- Injected by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Tab Content: Completed List -->
+        <div id="tabContentCompleted" class="tab-page">
+          <div class="downloads-list" id="completedDownloadsList">
+            <!-- Injected by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Tab Content: Paused List -->
+        <div id="tabContentPaused" class="tab-page">
+          <div class="downloads-list" id="pausedDownloadsList">
+            <!-- Injected by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Tab Content: Failed List -->
+        <div id="tabContentFailed" class="tab-page">
+          <div class="downloads-list" id="failedDownloadsList">
+            <!-- Empty State for Failed -->
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 3: FAVORITES SCREEN
+           ===================================================================== -->
+      <section id="viewFavorites" class="screen-view">
+        <div class="screen-header-row">
+          <div>
+            <h2 class="screen-title">Favorites</h2>
+            <p class="screen-desc">Quick shortcuts to frequently downloaded creators & channels</p>
+          </div>
+          <button id="addFavoriteBtn" class="glass-action-btn small">+ Add Link</button>
+        </div>
+
+        <div class="favorites-grid" id="favoritesList">
+          <!-- Favorite Cards Injected by JavaScript -->
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 4: SETTINGS & STORAGE DASHBOARD
+           ===================================================================== -->
+      <section id="viewSettings" class="screen-view">
+        <h2 class="screen-title">Settings</h2>
+        <p class="screen-desc">Preferences, Storage & Branding Information</p>
+
+        <!-- ===================================================================
+             10. STORAGE DASHBOARD (Animated Circular Indicator)
+             =================================================================== -->
+        <div class="glass-card storage-card">
+          <div class="storage-card-header">
+            <span class="storage-title">Storage Used</span>
+            <span class="storage-badge-free">51.6 GB Free</span>
+          </div>
+
+          <div class="storage-visual-row">
+            <!-- Circular Progress Indicator -->
+            <div class="circular-progress-container">
+              <svg class="circular-progress" width="100" height="100" viewBox="0 0 100 100">
+                <circle class="circle-bg" cx="50" cy="50" r="42"></circle>
+                <circle class="circle-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="180"></circle>
+              </svg>
+              <div class="circle-center-text">
+                <span class="circle-pct">19%</span>
+                <span class="circle-label">USED</span>
               </div>
             </div>
-            <div class="stats-row">
-              <div class="stat-item">
-                <span class="stat-icon">👁️</span>
-                <span id="statViews">Public</span>
+
+            <!-- Breakdown Legend -->
+            <div class="storage-legend">
+              <div class="legend-item">
+                <span class="legend-dot cyan"></span>
+                <span class="legend-name">Videos</span>
+                <span class="legend-val">8.2 GB</span>
               </div>
-              <div class="stat-item">
-                <span class="stat-icon">❤️</span>
-                <span id="statLikes">Supported</span>
+              <div class="legend-item">
+                <span class="legend-dot purple"></span>
+                <span class="legend-name">Audio (MP3)</span>
+                <span class="legend-val">2.1 GB</span>
               </div>
+              <div class="legend-item">
+                <span class="legend-dot yellow"></span>
+                <span class="legend-name">App Cache</span>
+                <span class="legend-val">2.1 GB</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="storage-actions-row">
+            <button id="changeFolderBtn" class="glass-btn-secondary">📁 Change Folder</button>
+            <button id="clearCacheBtn" class="glass-btn-secondary danger">🗑️ Clear Cache</button>
+          </div>
+        </div>
+
+        <!-- Settings Groups -->
+        <div class="settings-group">
+          <div class="settings-group-title">DOWNLOAD CONFIGURATION</div>
+          
+          <div class="settings-row">
+            <div class="setting-text">
+              <span class="setting-label">Default Quality</span>
+              <span class="setting-sub">Highest Available (1080p FHD)</span>
+            </div>
+            <select class="glass-select" id="settingDefaultQuality">
+              <option value="auto">Auto (Best)</option>
+              <option value="1080" selected>1080p FHD</option>
+              <option value="720">720p HD</option>
+              <option value="480">480p SD</option>
+              <option value="mp3">Audio Only (MP3)</option>
+            </select>
+          </div>
+
+          <div class="settings-row">
+            <div class="setting-text">
+              <span class="setting-label">Concurrent Downloads</span>
+              <span class="setting-sub">Maximum simultaneous downloads</span>
+            </div>
+            <select class="glass-select" id="settingConcurrency">
+              <option value="1">1 Active</option>
+              <option value="3" selected>3 Active (Recommended)</option>
+              <option value="5">5 Active</option>
+            </select>
+          </div>
+
+          <div class="settings-row">
+            <div class="setting-text">
+              <span class="setting-label">Background Download</span>
+              <span class="setting-sub">Keep downloading when screen is off</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="toggleBackgroundDl">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Appearance Section -->
+        <div class="settings-group">
+          <div class="settings-group-title">APPEARANCE & THEME</div>
+          
+          <div class="settings-row">
+            <div class="setting-text">
+              <span class="setting-label">Color Theme</span>
+              <span class="setting-sub">True Black AMOLED Glassmorphism</span>
+            </div>
+            <div class="theme-selector-chips">
+              <button class="theme-chip active" data-theme="amoled">AMOLED</button>
+              <button class="theme-chip" data-theme="dark">Dark</button>
+              <button class="theme-chip" data-theme="light">Light</button>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <div class="setting-text">
+              <span class="setting-label">Neon Accent Color</span>
+              <span class="setting-sub">Cyan, Electric Purple, Emerald</span>
+            </div>
+            <div class="accent-selector-row">
+              <button class="accent-dot cyan active" data-accent="cyan"></button>
+              <button class="accent-dot purple" data-accent="purple"></button>
+              <button class="accent-dot green" data-accent="green"></button>
             </div>
           </div>
         </div>
 
-        <!-- Formats Grid -->
-        <div class="formats-section">
-          <div class="formats-header">
-            <h3>Available Download Resolutions</h3>
-            <span class="formats-count" id="formatCount">Formats Ready</span>
+        <!-- About Section -->
+        <div class="settings-group">
+          <div class="settings-group-title">ABOUT & BRANDING</div>
+          
+          <div class="about-card">
+            <div class="about-header">
+              <div class="about-logo">⚡</div>
+              <div>
+                <h3 class="about-app-name">ARJUN RAJPUT</h3>
+                <p class="about-app-tag">All Video Downloader • v3.5.0</p>
+              </div>
+            </div>
+            <p class="about-desc">
+              Engineered by <strong>ZYROX</strong> for ultra-fast, watermark-free media downloading across all social networks. 
+              Designed with 2026 Glassmorphism + AMOLED architecture.
+            </p>
+            <div class="about-links-row">
+              <a href="#privacy" class="about-link">Privacy Policy</a>
+              <span>•</span>
+              <a href="#terms" class="about-link">Terms of Service</a>
+              <span>•</span>
+              <a href="#license" class="about-link">Open Source Licenses</a>
+            </div>
           </div>
+        </div>
 
-          <div class="formats-grid" id="formatsGrid">
-            <!-- Injected via JavaScript -->
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Social Apps Logos Grid -->
-    <section class="social-logos-section">
-      <div class="section-badge">SUPPORTED ECOSYSTEM</div>
-      <h2 class="section-title">One Downloader For <span class="gradient-text">All Social Apps</span></h2>
-      <div class="apps-grid">
-        <div class="app-card bilibili-glow">
-          <div class="app-icon">📺</div>
-          <h4>Bilibili</h4>
-          <span class="app-tag">1080p • Donghua • Anime</span>
-        </div>
-        <div class="app-card youtube-glow">
-          <div class="app-icon">🔴</div>
-          <h4>YouTube</h4>
-          <span class="app-tag">Shorts • 1080p • MP3</span>
-        </div>
-        <div class="app-card instagram-glow">
-          <div class="app-icon">📸</div>
-          <h4>Instagram</h4>
-          <span class="app-tag">Reels • Posts • Stories</span>
-        </div>
-        <div class="app-card tiktok-glow">
-          <div class="app-icon">🎵</div>
-          <h4>TikTok</h4>
-          <span class="app-tag">No Watermark • HD</span>
-        </div>
-        <div class="app-card twitter-glow">
-          <div class="app-icon">🐦</div>
-          <h4>Twitter / X</h4>
-          <span class="app-tag">Direct MP4 • Fast</span>
-        </div>
-        <div class="app-card facebook-glow">
-          <div class="app-icon">📘</div>
-          <h4>Facebook</h4>
-          <span class="app-tag">Reels • HD Videos</span>
-        </div>
-        <div class="app-card reddit-glow">
-          <div class="app-icon">🤖</div>
-          <h4>Reddit</h4>
-          <span class="app-tag">Audio + Video Merged</span>
-        </div>
-        <div class="app-card pinterest-glow">
-          <div class="app-icon">📌</div>
-          <h4>Pinterest</h4>
-          <span class="app-tag">Video Pins • HD</span>
-        </div>
-      </div>
-    </section>
+    </div> <!-- /screens-viewport -->
 
-    <!-- Features Section -->
-    <section class="features-section" id="features">
-      <div class="section-badge">ZYROX ARCHITECTURE</div>
-      <h2 class="section-title">Engineered by <span class="gradient-text">Arjun Rajput</span></h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon glow-cyan">🚫</div>
-          <h3>Zero Watermark</h3>
-          <p>Direct master CDN stream bypass eliminates watermarks, branding logos, and app outro cards.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon glow-purple">⚡</div>
-          <h3>Vercel Serverless Speed</h3>
-          <p>Multi-threaded high-speed stream proxy delivers uninterrupted downloads directly to your device.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon glow-green">🎬</div>
-          <h3>Original Ultra HD</h3>
-          <p>Extracts up to 1080p Full HD, 720p HD, and high-bitrate 320kbps MP3 audio tracks.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon glow-yellow">📱</div>
-          <h3>100% Free & Universal</h3>
-          <p>Zero software installation, zero login. Works on Android, iPhone, Windows, Mac, and Linux.</p>
-        </div>
-      </div>
-    </section>
 
-    <!-- How It Works Section -->
-    <section class="how-section" id="how-it-works">
-      <div class="section-badge">3 SIMPLE STEPS</div>
-      <h2 class="section-title">How To Download Any Video</h2>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">01</div>
-          <h3>Copy Link</h3>
-          <p>Copy the video, reel, or short link from any supported app (Bilibili, Instagram, TikTok, YouTube, etc.).</p>
+    <!-- =========================================================================
+         17. FLOATING GLASS BOTTOM NAVIGATION BAR
+         ========================================================================= -->
+    <nav class="floating-glass-nav">
+      <button class="nav-item active" data-view="viewHome">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
         </div>
-        <div class="step-card">
-          <div class="step-number">02</div>
-          <h3>Paste In Box</h3>
-          <p>Paste the link into the search box above. The engine automatically detects the platform.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">03</div>
-          <h3>Download File</h3>
-          <p>Choose 1080p, 720p, or MP3 and click Download. Video saves directly to your device!</p>
-        </div>
-      </div>
-    </section>
-  </main>
+        <span class="nav-label">Home</span>
+      </button>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-brand">
-        <span class="footer-logo">⚡ ARJUN RAJPUT</span>
-        <span class="footer-sub">POWERED BY ZYROX ENGINE</span>
+      <button class="nav-item" data-view="viewDownloads">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="nav-badge" id="navDownloadsBadge">1</span>
+        </div>
+        <span class="nav-label">Downloads</span>
+      </button>
+
+      <button class="nav-item" data-view="viewFavorites">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Favorites</span>
+      </button>
+
+      <button class="nav-item" data-view="viewSettings">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </div>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+  </div> <!-- /app-frame -->
+
+
+  <!-- =========================================================================
+       4. QUALITY SELECTION GLASS BOTTOM SHEET
+       ========================================================================= -->
+  <div id="qualityBottomSheet" class="bottom-sheet-backdrop hidden">
+    <div class="bottom-sheet-content">
+      <div class="sheet-drag-handle"></div>
+      <div class="sheet-header">
+        <div>
+          <h3 class="sheet-title">Choose Download Quality</h3>
+          <p class="sheet-sub">Original high-bitrate stream • No Watermark</p>
+        </div>
+        <button id="closeQualitySheetBtn" class="sheet-close-btn">✕</button>
       </div>
-      <p class="footer-copy">
-        © 2026 Arjun Rajput. Universal Video & Audio Downloader Platform.
-      </p>
-      <div class="footer-tags">
-        <span>Vercel Optimized</span>
-        <span>•</span>
-        <span>All Platforms Supported</span>
-        <span>•</span>
-        <span>No Watermark</span>
+
+      <div class="quality-chips-grid" id="qualityOptionsGrid">
+        <!-- Injected by JavaScript -->
+      </div>
+
+      <button id="confirmDownloadBtn" class="cta-download-btn modal-cta">
+        <span class="cta-icon">⬇</span>
+        <span class="cta-text">Start Download</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       7. DOWNLOAD COMPLETED CELEBRATION SUCCESS CARD
+       ========================================================================= -->
+  <div id="successModal" class="modal-backdrop hidden">
+    <div class="glass-success-card">
+      <div class="success-icon-wrap">
+        <svg class="checkmark-svg" width="60" height="60" viewBox="0 0 52 52">
+          <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none"/>
+          <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+      <h3 class="success-title">DOWNLOAD COMPLETE</h3>
+      <p class="success-filename" id="successFileName">[ARJUN_RAJPUT]_Video.mp4</p>
+      
+      <div class="success-meta-row">
+        <span class="success-tag" id="successFileSize">94.1 MB</span>
+        <span class="success-tag" id="successResolution">1080p FHD</span>
+        <span class="success-tag" id="successFormat">MP4</span>
+      </div>
+
+      <div class="success-btn-row">
+        <button id="successOpenFileBtn" class="btn-success-action primary">▶ Open File</button>
+        <button id="successShareBtn" class="btn-success-action secondary">↗ Share</button>
+      </div>
+
+      <button id="closeSuccessModalBtn" class="btn-modal-dismiss">Dismiss</button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       12. GLOBAL SEARCH OVERLAY
+       ========================================================================= -->
+  <div id="searchOverlay" class="search-overlay-backdrop hidden">
+    <div class="search-overlay-box">
+      <div class="search-input-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="globalSearchInput" placeholder="Search by title, format (MP4/MP3), resolution..." autofocus>
+        <button id="closeSearchBtn" class="sheet-close-btn">✕</button>
+      </div>
+      <div class="search-results-list" id="searchResultsList">
+        <div class="search-empty-hint">Type to search your downloaded videos and history...</div>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="toast hidden">
-    <span id="toastIcon">✔</span>
-    <span id="toastMsg">Notification message</span>
+
+  <!-- Toast Notification Pill -->
+  <div id="glassToast" class="glass-toast hidden">
+    <span id="toastIcon" class="toast-icon">⚡</span>
+    <span id="toastMessage" class="toast-text">Action completed successfully</span>
   </div>
 
   <script src="app.js"></script>
