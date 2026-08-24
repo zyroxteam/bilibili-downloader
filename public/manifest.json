@@ -1,0 +1,23 @@
+{
+  "name": "ARJUN RAJPUT – All Video Downloader",
+  "short_name": "ARJUN RAJPUT",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "Download Videos from Bilibili, YouTube, TikTok, Instagram, Twitter, Facebook in 1080p Full HD & MP3 without watermark.",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

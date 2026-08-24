@@ -1,10 +1,15 @@
 // --------------------------------------------------------------------------
 // ⚡ ARJUN RAJPUT – ALL VIDEO DOWNLOADER (POWERED BY ZYROX)
-// 3D Tactile Buttons • Web Audio Sound Synthesizer • Round Splash Screen
+// Real-Time Chunk Streaming Engine • Background Service Worker • 60FPS Smooth UI
 // --------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Sound Synthesis Engine (Web Audio API - 0ms Latency, Zero Dependencies)
+  // 1. Register PWA Service Worker for Background Execution
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  // 2. Sound Synthesis Engine (0ms Latency)
   let soundEnabled = true;
   let audioCtx = null;
 
@@ -18,133 +23,84 @@ document.addEventListener('DOMContentLoaded', () => {
     return audioCtx;
   }
 
-  // 1. Tactile 3D Click Sound
   function playClickSound() {
     if (!soundEnabled) return;
     try {
       const ctx = getAudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.06);
-
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
-
+      osc.frequency.setValueAtTime(750, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       osc.start();
-      osc.stop(ctx.currentTime + 0.06);
+      osc.stop(ctx.currentTime + 0.05);
     } catch (e) {}
   }
 
-  // 2. Futuristic Laser Fetch Sound
   function playFetchSound() {
     if (!soundEnabled) return;
     try {
       const ctx = getAudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(400, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.15);
-
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.18);
-
+      osc.frequency.setValueAtTime(450, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1400, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.14);
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       osc.start();
-      osc.stop(ctx.currentTime + 0.18);
+      osc.stop(ctx.currentTime + 0.14);
     } catch (e) {}
   }
 
-  // 3. Download Start Sound
-  function playDownloadStartSound() {
-    if (!soundEnabled) return;
-    try {
-      const ctx = getAudioContext();
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc1.type = 'triangle';
-      osc2.type = 'sine';
-
-      osc1.frequency.setValueAtTime(300, ctx.currentTime);
-      osc1.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.2);
-
-      osc2.frequency.setValueAtTime(450, ctx.currentTime);
-      osc2.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.2);
-
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc1.start();
-      osc2.start();
-      osc1.stop(ctx.currentTime + 0.25);
-      osc2.stop(ctx.currentTime + 0.25);
-    } catch (e) {}
-  }
-
-  // 4. Success Fanfare Chord Sound
   function playSuccessSound() {
     if (!soundEnabled) return;
     try {
       const ctx = getAudioContext();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, High C
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
-
-        gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.4);
-
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.07);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.07 + 0.35);
         osc.connect(gain);
         gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime + idx * 0.08);
-        osc.stop(ctx.currentTime + idx * 0.08 + 0.45);
+        osc.start(ctx.currentTime + idx * 0.07);
+        osc.stop(ctx.currentTime + idx * 0.07 + 0.4);
       });
     } catch (e) {}
   }
 
-  // Attach sound to all buttons
   document.addEventListener('click', (e) => {
     if (e.target.closest('button') || e.target.closest('.nav-item') || e.target.closest('.quality-chip-card')) {
       playClickSound();
     }
   });
 
-  // Sound Toggle Button
   const soundToggleBtn = document.getElementById('soundToggleBtn');
   const soundIcon = document.getElementById('soundIcon');
   soundToggleBtn?.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
     if (soundIcon) soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
-    showToast(soundEnabled ? 'Button Sound Effects Enabled' : 'Sound Effects Muted', soundEnabled ? '🔊' : '🔇');
+    showToast(soundEnabled ? 'Button Sound Enabled' : 'Sound Muted', soundEnabled ? '🔊' : '🔇');
   });
 
-  // Round Splash Screen Dismiss
+  // 3. Round Splash Screen Dismiss
   const splashScreen = document.getElementById('splashScreen');
   setTimeout(() => {
     if (splashScreen) {
       splashScreen.classList.add('fade-out');
-      setTimeout(() => splashScreen.remove(), 600);
+      setTimeout(() => splashScreen.remove(), 400);
     }
-  }, 1800);
+  }, 1400);
 
   // Status Clock
   function updateClock() {
@@ -157,10 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 30000);
 
-  // Canvas Particles
-  initAmbientParticles();
-
-  // Navigation Router (Home, Downloads, Favorites, Settings)
+  // Navigation Router
   const navItems = document.querySelectorAll('.nav-item');
   const screenViews = document.querySelectorAll('.screen-view');
 
@@ -177,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
           v.classList.remove('active');
         }
       });
-      triggerHaptic();
     });
   });
 
@@ -185,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.nav-item[data-view="viewSettings"]')?.click();
   });
 
-  // Home Screen Elements
+  // Views & UI Elements
   const mainUrlInput = document.getElementById('mainUrlInput');
   const pasteUrlBtn = document.getElementById('pasteUrlBtn');
   const clearUrlBtn = document.getElementById('clearUrlBtn');
@@ -218,23 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // State
   let currentVideoData = null;
   let selectedQualityItem = null;
-
-  const downloads = [
-    {
-      id: 'dl_1',
-      title: 'Rick Astley - Never Gonna Give You Up (4K)',
-      thumb: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
-      platform: 'YouTube',
-      quality: '1080p FHD',
-      format: 'MP4',
-      size: '94.1 MB',
-      progress: 46,
-      speed: '8.4 MB/s',
-      eta: '00:08',
-      status: 'active'
-    }
-  ];
-
+  const activeDownloads = [];
   const completedDownloads = [
     {
       id: 'c_1',
@@ -250,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderDownloads();
 
-  // Input Listeners
+  // URL Input
   mainUrlInput?.addEventListener('input', () => {
     const val = mainUrlInput.value.trim();
     if (val.length > 0) {
@@ -274,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
     detectedBadge.classList.add('hidden');
     videoPreviewCard.classList.add('hidden');
     mainUrlInput.focus();
-    triggerHaptic();
   });
 
   pasteUrlBtn?.addEventListener('click', async () => {
@@ -288,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchVideoInfo(text);
       }
     } catch (e) {
-      showToast('Please paste the URL into the input', '⚠️');
+      showToast('Please paste the URL manually', '⚠️');
     }
   });
 
@@ -302,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchVideoInfo(u);
   });
 
-  // Sample Buttons
   document.querySelectorAll('.sample-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const u = btn.getAttribute('data-url');
@@ -311,7 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
       detectAndShowPlatform(u);
       playFetchSound();
       fetchVideoInfo(u);
-      triggerHaptic();
     });
   });
 
@@ -333,27 +266,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Fetch Video Info via API
+  // 4. Video Info Extractor
   async function fetchVideoInfo(url) {
-    previewShimmer.classList.remove('hidden');
-    videoPreviewCard.classList.add('hidden');
+    previewShimmer?.classList.remove('hidden');
+    videoPreviewCard?.classList.add('hidden');
 
     try {
       const res = await fetch(`/api/parse?url=${encodeURIComponent(url)}`);
       const data = await res.json();
 
-      previewShimmer.classList.add('hidden');
+      previewShimmer?.classList.add('hidden');
 
       if (data && data.success && data.data) {
         currentVideoData = data.data;
         displayVideoPreview(data.data);
         showToast(`${data.data.platform || 'Video'} formats loaded!`, '⚡');
-        triggerHaptic();
       } else {
         showToast(data?.error || 'Unable to extract video stream', '⚠️');
       }
     } catch (err) {
-      previewShimmer.classList.add('hidden');
+      previewShimmer?.classList.add('hidden');
       showToast('Connecting to video servers...', '⚠️');
     }
   }
@@ -372,12 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
     videoPreviewCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // Open Quality Selection Glass Bottom Sheet
   openQualityModalBtn?.addEventListener('click', () => {
     if (!currentVideoData) return;
     renderQualityOptions(currentVideoData.formats || []);
     qualityBottomSheet.classList.remove('hidden');
-    triggerHaptic();
   });
 
   closeQualitySheetBtn?.addEventListener('click', () => {
@@ -411,88 +341,168 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.quality-chip-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         selectedQualityItem = f;
-        triggerHaptic();
       });
 
       qualityOptionsGrid.appendChild(card);
     });
   }
 
-  // Confirm Download CTA
+  // --------------------------------------------------------------------------
+  // 5. REAL CHUNK STREAMING DOWNLOAD ENGINE (Background & Large File Support)
+  // --------------------------------------------------------------------------
   confirmDownloadBtn?.addEventListener('click', () => {
     qualityBottomSheet.classList.add('hidden');
     if (!selectedQualityItem || !currentVideoData) return;
 
-    playDownloadStartSound();
-
-    const newDownload = {
+    const downloadTask = {
       id: 'dl_' + Date.now(),
       title: currentVideoData.title || 'Video Download',
       thumb: currentVideoData.thumbnail || '',
       platform: currentVideoData.platform || 'Social',
       quality: selectedQualityItem.label,
       format: selectedQualityItem.format || 'MP4',
-      size: selectedQualityItem.size || '90 MB',
+      size: selectedQualityItem.size || 'HD',
+      downloadUrl: selectedQualityItem.downloadUrl,
       progress: 0,
-      speed: 'Initializing...',
-      eta: '00:15',
-      status: 'active'
+      speed: 'Connecting...',
+      eta: 'Calculating...',
+      status: 'active',
+      receivedBytes: 0,
+      totalBytes: 0
     };
 
-    downloads.unshift(newDownload);
+    activeDownloads.unshift(downloadTask);
     renderDownloads();
 
-    showSystemNotification(newDownload.title);
+    showSystemNotification(downloadTask.title);
     document.querySelector('.nav-item[data-view="viewDownloads"]')?.click();
-    showToast('Download started in background 🚀', '⬇️');
+    showToast('Download started with real-time stream 🚀', '⬇️');
 
-    if (selectedQualityItem.downloadUrl) {
-      const link = document.createElement('a');
-      link.href = selectedQualityItem.downloadUrl;
-      link.setAttribute('download', '');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    animateLiveDownload(newDownload);
+    // Execute Real Streaming in Background
+    executeRealStreamDownload(downloadTask);
   });
 
-  function animateLiveDownload(item) {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 8) + 4;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-        item.progress = 100;
-        item.status = 'completed';
-        renderDownloads();
-        playSuccessSound();
-        showSuccessCelebration(item);
-      } else {
-        item.progress = progress;
-        item.speed = (Math.random() * 4 + 6).toFixed(1) + ' MB/s';
-        const rem = Math.max(1, Math.floor((100 - progress) / 7));
-        item.eta = `00:${String(rem).padStart(2, '0')}`;
-        renderDownloads();
-        updateSystemNotification(item.speed, progress, item.eta);
+  async function executeRealStreamDownload(task) {
+    const startTime = Date.now();
+    const safeTitle = (task.title || 'Video').replace(/[/\\?%*:|"<>]/g, '_').substring(0, 60);
+    const fileName = `[ARJUN_RAJPUT]_${safeTitle}.${task.format.toLowerCase()}`;
+
+    try {
+      const response = await fetch(task.downloadUrl, {
+        headers: { 'Accept': '*/*' }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
       }
-    }, 450);
+
+      const contentLength = response.headers.get('content-length');
+      const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
+      task.totalBytes = totalBytes;
+
+      const reader = response.body.getReader();
+      const chunks = [];
+      let receivedBytes = 0;
+      let lastUIUpdate = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
+        receivedBytes += value.length;
+        task.receivedBytes = receivedBytes;
+
+        const now = Date.now();
+        // Update UI throttled to 10fps for silky smooth performance
+        if (now - lastUIUpdate > 100) {
+          lastUIUpdate = now;
+          const elapsedSec = Math.max(0.1, (now - startTime) / 1000);
+          const speedMB = (receivedBytes / (1024 * 1024)) / elapsedSec;
+          const pct = totalBytes > 0 ? Math.min(99, Math.floor((receivedBytes / totalBytes) * 100)) : Math.min(99, Math.floor(receivedBytes / (1024 * 1024 * 1.5)));
+          const remainingBytes = Math.max(0, totalBytes - receivedBytes);
+          const etaSec = (speedMB > 0 && remainingBytes > 0) ? Math.floor((remainingBytes / (1024 * 1024)) / speedMB) : 0;
+
+          task.progress = pct;
+          task.speed = `${speedMB.toFixed(1)} MB/s`;
+          task.eta = totalBytes > 0 ? `00:${String(etaSec).padStart(2, '0')}` : 'Streaming...';
+
+          updateDownloadCardUI(task);
+          updateSystemNotification(task.speed, pct, task.eta);
+        }
+      }
+
+      // Download 100% Finished - Assemble Blob and Save Directly
+      task.progress = 100;
+      task.status = 'completed';
+      updateDownloadCardUI(task);
+
+      const mimeType = task.format.toLowerCase() === 'mp3' ? 'audio/mpeg' : 'video/mp4';
+      const blob = new Blob(chunks, { type: mimeType });
+      const blobUrl = URL.createObjectURL(blob);
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = blobUrl;
+      downloadLink.download = fileName;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+
+      // Clean up after 1 minute
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+
+      // Move from active to completed list
+      const idx = activeDownloads.indexOf(task);
+      if (idx !== -1) activeDownloads.splice(idx, 1);
+
+      completedDownloads.unshift({
+        id: 'c_' + Date.now(),
+        title: task.title,
+        thumb: task.thumb,
+        platform: task.platform,
+        quality: task.quality,
+        format: task.format,
+        size: `${(receivedBytes / (1024 * 1024)).toFixed(1)} MB`,
+        date: 'Just now'
+      });
+
+      renderDownloads();
+      playSuccessSound();
+      showSuccessCelebration(task);
+
+    } catch (err) {
+      console.warn('Direct stream fallback:', err);
+      // Fallback for massive files: Direct browser redirect download
+      window.open(task.downloadUrl, '_blank');
+      task.status = 'completed';
+      task.progress = 100;
+      renderDownloads();
+    }
   }
 
-  function showSuccessCelebration(item) {
-    document.getElementById('successFileName').textContent = `[ARJUN_RAJPUT]_${item.title.substring(0, 30)}.${item.format.toLowerCase()}`;
-    document.getElementById('successFileSize').textContent = item.size;
-    document.getElementById('successResolution').textContent = item.quality;
-    document.getElementById('successFormat').textContent = item.format;
-    successModal.classList.remove('hidden');
-    triggerConfetti();
-    triggerHaptic();
+  function updateDownloadCardUI(task) {
+    const card = document.querySelector(`.download-card[data-id="${task.id}"]`);
+    if (!card) return;
+
+    const fill = card.querySelector('.dl-progress-fill');
+    const speedEl = card.querySelector('.dl-speed-text');
+    const etaEl = card.querySelector('.dl-eta-text');
+
+    if (fill) fill.style.width = `${task.progress}%`;
+    if (speedEl) speedEl.textContent = `⚡ ${task.speed} • ${task.progress}%`;
+    if (etaEl) etaEl.textContent = `⏳ ETA ${task.eta}`;
+  }
+
+  function showSuccessCelebration(task) {
+    document.getElementById('successFileName').textContent = `[ARJUN_RAJPUT]_${task.title.substring(0, 30)}.${task.format.toLowerCase()}`;
+    document.getElementById('successFileSize').textContent = task.size;
+    document.getElementById('successResolution').textContent = task.quality;
+    document.getElementById('successFormat').textContent = task.format;
+    successModal?.classList.remove('hidden');
   }
 
   closeSuccessModalBtn?.addEventListener('click', () => {
-    successModal.classList.add('hidden');
+    successModal?.classList.add('hidden');
   });
 
   function renderDownloads() {
@@ -502,25 +512,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const countCompleted = document.getElementById('countCompleted');
     const navBadge = document.getElementById('navDownloadsBadge');
 
-    const activeItems = downloads.filter(d => d.status === 'active' || d.status === 'waiting');
-    const doneItems = completedDownloads;
-
-    if (countActive) countActive.textContent = activeItems.length;
-    if (countCompleted) countCompleted.textContent = doneItems.length;
-    if (navBadge) navBadge.textContent = activeItems.length;
+    if (countActive) countActive.textContent = activeDownloads.length;
+    if (countCompleted) countCompleted.textContent = completedDownloads.length;
+    if (navBadge) {
+      navBadge.textContent = activeDownloads.length;
+      navBadge.style.display = activeDownloads.length > 0 ? 'block' : 'none';
+    }
 
     if (activeListEl) {
-      if (activeItems.length === 0) {
+      if (activeDownloads.length === 0) {
         activeListEl.innerHTML = `
           <div class="search-empty-hint">
             <div style="font-size: 32px; margin-bottom: 8px;">📥</div>
             <h4>No Active Downloads</h4>
-            <p style="font-size: 0.76rem; color: var(--text-muted);">Paste a link on Home to start downloading.</p>
+            <p style="font-size: 0.76rem; color: var(--text-muted);">Paste a video link to start live downloading.</p>
           </div>
         `;
       } else {
-        activeListEl.innerHTML = activeItems.map(d => `
-          <div class="download-card">
+        activeListEl.innerHTML = activeDownloads.map(d => `
+          <div class="download-card" data-id="${d.id}">
             <div class="dl-card-top">
               <img src="${d.thumb || 'https://via.placeholder.com/100x60'}" class="dl-thumb" alt="Thumbnail">
               <div class="dl-meta">
@@ -538,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="dl-card-bottom">
               <span class="dl-speed-text">⚡ ${d.speed} • ${d.progress}%</span>
-              <span>⏳ ETA ${d.eta}</span>
+              <span class="dl-eta-text">⏳ ETA ${d.eta}</span>
               <div class="dl-actions-group">
                 <button class="dl-icon-btn" title="Pause">⏸</button>
                 <button class="dl-icon-btn" title="Cancel">✕</button>
@@ -550,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (completedListEl) {
-      completedListEl.innerHTML = doneItems.map(c => `
+      completedListEl.innerHTML = completedDownloads.map(c => `
         <div class="download-card">
           <div class="dl-card-top">
             <img src="${c.thumb}" class="dl-thumb" alt="Thumbnail">
@@ -588,74 +598,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const tab = pill.getAttribute('data-tab');
       const targetPage = document.getElementById(`tabContent${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
       if (targetPage) targetPage.classList.add('active');
-      triggerHaptic();
     });
   });
 
-  // Favorites
-  const favorites = [
-    { title: 'Bilibili Trending Donghua Channel', source: '📺 Bilibili', icon: '📺' },
-    { title: 'Top TikTok Dance Creators Hub', source: '🎵 TikTok', icon: '🎵' },
-    { title: 'YouTube 4K Tech & Tutorials', source: '🔴 YouTube', icon: '🔴' }
-  ];
-
-  const favListEl = document.getElementById('favoritesList');
-  if (favListEl) {
-    favListEl.innerHTML = favorites.map(f => `
-      <div class="glass-card" style="padding: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; background: var(--glass-card); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="font-size: 24px;">${f.icon}</div>
-          <div>
-            <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-pure);">${f.title}</div>
-            <div style="font-size: 0.72rem; color: var(--neon-cyan);">${f.source}</div>
-          </div>
-        </div>
-        <button class="btn-3d-dark" style="padding: 6px 12px; font-size: 0.75rem; color: var(--neon-cyan);">⚡ Grab</button>
-      </div>
-    `).join('');
-  }
-
-  // Search
-  const searchTriggerBtn = document.getElementById('searchTriggerBtn');
-  const searchOverlay = document.getElementById('searchOverlay');
-  const closeSearchBtn = document.getElementById('closeSearchBtn');
-  const globalSearchInput = document.getElementById('globalSearchInput');
-  const searchResultsList = document.getElementById('searchResultsList');
-
-  searchTriggerBtn?.addEventListener('click', () => {
-    searchOverlay.classList.remove('hidden');
-    globalSearchInput.focus();
-    triggerHaptic();
-  });
-
-  closeSearchBtn?.addEventListener('click', () => {
-    searchOverlay.classList.add('hidden');
-  });
-
-  globalSearchInput?.addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase().trim();
-    if (!q) {
-      searchResultsList.innerHTML = '<div class="search-empty-hint">Type to search your downloaded videos and history...</div>';
-      return;
-    }
-    const matches = completedDownloads.filter(d => d.title.toLowerCase().includes(q) || d.platform.toLowerCase().includes(q) || d.format.toLowerCase().includes(q));
-    if (matches.length === 0) {
-      searchResultsList.innerHTML = '<div class="search-empty-hint">No matching videos found.</div>';
-    } else {
-      searchResultsList.innerHTML = matches.map(m => `
-        <div class="glass-card" style="padding: 12px; display: flex; gap: 10px; align-items: center; background: var(--glass-card); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
-          <img src="${m.thumb}" style="width: 50px; height: 35px; border-radius: 6px; object-fit: cover;">
-          <div style="flex: 1;">
-            <div style="font-size: 0.82rem; font-weight: 700; color: #fff;">${m.title}</div>
-            <div style="font-size: 0.7rem; color: var(--neon-cyan);">${m.platform} • ${m.size}</div>
-          </div>
-          <button class="btn-3d-dark" style="padding: 6px 10px; font-size: 0.75rem;">▶</button>
-        </div>
-      `).join('');
-    }
-  });
-
-  // System Notification
+  // System Notification Simulation
   const sysNotif = document.getElementById('systemNotification');
   const notifTitle = document.getElementById('notifTitle');
   const notifProgressBar = document.getElementById('notifProgressBar');
@@ -672,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
     notifProgressBar.style.width = `${pct}%`;
     notifMetrics.textContent = `⚡ ${speed} • ${pct}% • ETA ${eta}`;
     if (pct >= 100) {
-      setTimeout(() => sysNotif.classList.add('hidden'), 3000);
+      setTimeout(() => sysNotif.classList.add('hidden'), 2500);
     }
   }
 
@@ -684,90 +630,6 @@ document.addEventListener('DOMContentLoaded', () => {
     toastMsg.textContent = msg;
     toastIcon.textContent = icon;
     toastEl.classList.remove('hidden');
-    setTimeout(() => toastEl.classList.add('hidden'), 3000);
-  }
-
-  function triggerHaptic() {
-    if (navigator.vibrate) {
-      navigator.vibrate(14);
-    }
-  }
-
-  function initAmbientParticles() {
-    const canvas = document.getElementById('ambientCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const particles = Array.from({ length: 30 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 2 + 1,
-      speedX: (Math.random() - 0.5) * 0.4,
-      speedY: (Math.random() - 0.5) * 0.4,
-      opacity: Math.random() * 0.5 + 0.1
-    }));
-
-    function loop() {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
-
-        ctx.fillStyle = `rgba(0, 240, 255, ${p.opacity})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      requestAnimationFrame(loop);
-    }
-    loop();
-  }
-
-  function triggerConfetti() {
-    const canvas = document.getElementById('ambientCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
-
-    const burst = Array.from({ length: 50 }, () => ({
-      x: width / 2,
-      y: height / 2,
-      vx: (Math.random() - 0.5) * 12,
-      vy: (Math.random() - 0.5) * 12,
-      size: Math.random() * 4 + 2,
-      color: ['#00f0ff', '#a855f7', '#10b981', '#facc15'][Math.floor(Math.random() * 4)],
-      alpha: 1
-    }));
-
-    let frames = 0;
-    function animateBurst() {
-      if (frames > 40) return;
-      frames++;
-      burst.forEach(b => {
-        b.x += b.vx;
-        b.y += b.vy;
-        b.alpha *= 0.95;
-        ctx.fillStyle = b.color;
-        ctx.globalAlpha = b.alpha;
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(animateBurst);
-    }
-    animateBurst();
+    setTimeout(() => toastEl.classList.add('hidden'), 2800);
   }
 });
