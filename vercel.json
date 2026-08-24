@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/parse",
+      "destination": "/api/parse.js"
+    },
+    {
+      "source": "/api/download",
+      "destination": "/api/download.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/public/$1"
+    }
+  ]
+}

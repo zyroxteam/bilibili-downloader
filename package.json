@@ -1,0 +1,17 @@
+{
+  "name": "bilibili-downloader-arjun-rajput",
+  "version": "3.0.0",
+  "description": "Next-Gen Bilibili Video & Audio Downloader - Branding: ARJUN RAJPUT (MADE BY ZYROX)",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  },
+  "author": "Arjun Rajput",
+  "license": "MIT"
+}
