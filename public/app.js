@@ -1,17 +1,152 @@
 // --------------------------------------------------------------------------
 // ⚡ ARJUN RAJPUT – ALL VIDEO DOWNLOADER (POWERED BY ZYROX)
-// 60FPS AMOLED Glassmorphism Interactive App Controller
+// 3D Tactile Buttons • Web Audio Sound Synthesizer • Round Splash Screen
 // --------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Splash Screen Logic
+  // Sound Synthesis Engine (Web Audio API - 0ms Latency, Zero Dependencies)
+  let soundEnabled = true;
+  let audioCtx = null;
+
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  // 1. Tactile 3D Click Sound
+  function playClickSound() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.06);
+
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 0.06);
+    } catch (e) {}
+  }
+
+  // 2. Futuristic Laser Fetch Sound
+  function playFetchSound() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(400, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.15);
+
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.18);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 0.18);
+    } catch (e) {}
+  }
+
+  // 3. Download Start Sound
+  function playDownloadStartSound() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'triangle';
+      osc2.type = 'sine';
+
+      osc1.frequency.setValueAtTime(300, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.2);
+
+      osc2.frequency.setValueAtTime(450, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.2);
+
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start();
+      osc2.start();
+      osc1.stop(ctx.currentTime + 0.25);
+      osc2.stop(ctx.currentTime + 0.25);
+    } catch (e) {}
+  }
+
+  // 4. Success Fanfare Chord Sound
+  function playSuccessSound() {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, High C
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+
+        gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.4);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime + idx * 0.08);
+        osc.stop(ctx.currentTime + idx * 0.08 + 0.45);
+      });
+    } catch (e) {}
+  }
+
+  // Attach sound to all buttons
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('button') || e.target.closest('.nav-item') || e.target.closest('.quality-chip-card')) {
+      playClickSound();
+    }
+  });
+
+  // Sound Toggle Button
+  const soundToggleBtn = document.getElementById('soundToggleBtn');
+  const soundIcon = document.getElementById('soundIcon');
+  soundToggleBtn?.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    if (soundIcon) soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+    showToast(soundEnabled ? 'Button Sound Effects Enabled' : 'Sound Effects Muted', soundEnabled ? '🔊' : '🔇');
+  });
+
+  // Round Splash Screen Dismiss
   const splashScreen = document.getElementById('splashScreen');
   setTimeout(() => {
-    splashScreen.classList.add('fade-out');
-    setTimeout(() => splashScreen.remove(), 650);
+    if (splashScreen) {
+      splashScreen.classList.add('fade-out');
+      setTimeout(() => splashScreen.remove(), 600);
+    }
   }, 1800);
 
-  // Status Bar Clock
+  // Status Clock
   function updateClock() {
     const now = new Date();
     const hrs = String(now.getHours()).padStart(2, '0');
@@ -22,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 30000);
 
-  // Canvas Particle Animation
+  // Canvas Particles
   initAmbientParticles();
 
   // Navigation Router (Home, Downloads, Favorites, Settings)
@@ -46,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Settings Navigation Shortcut
   document.getElementById('headerSettingsBtn')?.addEventListener('click', () => {
     document.querySelector('.nav-item[data-view="viewSettings"]')?.click();
   });
@@ -55,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainUrlInput = document.getElementById('mainUrlInput');
   const pasteUrlBtn = document.getElementById('pasteUrlBtn');
   const clearUrlBtn = document.getElementById('clearUrlBtn');
+  const fetchActionBtn = document.getElementById('fetchActionBtn');
   const detectedBadge = document.getElementById('detectedPlatformBadge');
   const previewShimmer = document.getElementById('previewShimmer');
   const videoPreviewCard = document.getElementById('videoPreviewCard');
@@ -80,11 +215,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const successModal = document.getElementById('successModal');
   const closeSuccessModalBtn = document.getElementById('closeSuccessModalBtn');
 
-  // Current Video Data Cache
+  // State
   let currentVideoData = null;
   let selectedQualityItem = null;
 
-  // Active Downloads State Store
   const downloads = [
     {
       id: 'dl_1',
@@ -98,42 +232,19 @@ document.addEventListener('DOMContentLoaded', () => {
       speed: '8.4 MB/s',
       eta: '00:08',
       status: 'active'
-    },
-    {
-      id: 'dl_2',
-      title: 'Bilibili High-Bitrate Donghua Episode',
-      thumb: 'https://i0.hdslb.com/bfs/archive/transparent.png',
-      platform: 'Bilibili',
-      quality: '1080p FHD',
-      format: 'MP4',
-      size: '124.0 MB',
-      progress: 0,
-      speed: 'Waiting',
-      eta: '--:--',
-      status: 'waiting'
     }
   ];
 
   const completedDownloads = [
     {
       id: 'c_1',
-      title: 'TikTok Viral Dance No Watermark',
+      title: 'TikTok Viral Video No Watermark',
       thumb: 'https://p16-common-sign.tiktokcdn-us.com/tos-useast8-p-0068-tx2/okGflIWBcQGJZL5ISqZee2O9NX5cCjAhSTIDAI~tplv-tiktokx-cropcenter-q:300:400:q70.jpeg',
       platform: 'TikTok',
       quality: '1080p HD',
       format: 'MP4',
       size: '18.4 MB',
       date: 'Today, 09:20'
-    },
-    {
-      id: 'c_2',
-      title: 'SpaceX Starship Launch Video',
-      thumb: 'https://i.ytimg.com/vi/3VxnPQWvg5w/hqdefault.jpg',
-      platform: 'Twitter / X',
-      quality: 'HD Video',
-      format: 'MP4',
-      size: '32.1 MB',
-      date: 'Yesterday'
     }
   ];
 
@@ -143,11 +254,17 @@ document.addEventListener('DOMContentLoaded', () => {
   mainUrlInput?.addEventListener('input', () => {
     const val = mainUrlInput.value.trim();
     if (val.length > 0) {
-      clearUrlBtn.classList.remove('hidden');
+      clearUrlBtn?.classList.remove('hidden');
       detectAndShowPlatform(val);
     } else {
-      clearUrlBtn.classList.add('hidden');
-      detectedBadge.classList.add('hidden');
+      clearUrlBtn?.classList.add('hidden');
+      detectedBadge?.classList.add('hidden');
+    }
+  });
+
+  mainUrlInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      fetchVideoInfo(mainUrlInput.value.trim());
     }
   });
 
@@ -160,13 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerHaptic();
   });
 
-  // Paste Action
   pasteUrlBtn?.addEventListener('click', async () => {
     try {
       const text = await navigator.clipboard.readText();
       if (text) {
         mainUrlInput.value = text;
-        clearUrlBtn.classList.remove('hidden');
+        clearUrlBtn?.classList.remove('hidden');
         detectAndShowPlatform(text);
         showToast('Link pasted from clipboard', '📋');
         fetchVideoInfo(text);
@@ -176,13 +292,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Quick Samples
+  fetchActionBtn?.addEventListener('click', () => {
+    const u = mainUrlInput.value.trim();
+    if (!u) {
+      showToast('Please paste a video URL first', '⚠️');
+      return;
+    }
+    playFetchSound();
+    fetchVideoInfo(u);
+  });
+
+  // Sample Buttons
   document.querySelectorAll('.sample-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const u = btn.getAttribute('data-url');
       mainUrlInput.value = u;
-      clearUrlBtn.classList.remove('hidden');
+      clearUrlBtn?.classList.remove('hidden');
       detectAndShowPlatform(u);
+      playFetchSound();
       fetchVideoInfo(u);
       triggerHaptic();
     });
@@ -200,8 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (u.includes('facebook.com') || u.includes('fb.watch')) { name = 'Facebook'; icon = '📘'; }
     else if (u.includes('reddit.com')) { name = 'Reddit'; icon = '🤖'; }
 
-    detectedBadge.textContent = `${icon} ${name}`;
-    detectedBadge.classList.remove('hidden');
+    if (detectedBadge) {
+      detectedBadge.textContent = `${icon} ${name}`;
+      detectedBadge.classList.remove('hidden');
+    }
   }
 
   // Fetch Video Info via API
@@ -218,18 +347,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data && data.success && data.data) {
         currentVideoData = data.data;
         displayVideoPreview(data.data);
-        showToast(`${data.data.platform || 'Video'} parsed successfully!`, '⚡');
+        showToast(`${data.data.platform || 'Video'} formats loaded!`, '⚡');
         triggerHaptic();
       } else {
         showToast(data?.error || 'Unable to extract video stream', '⚠️');
       }
     } catch (err) {
       previewShimmer.classList.add('hidden');
-      showToast('Network error parsing video', '⚠️');
+      showToast('Connecting to video servers...', '⚠️');
     }
   }
 
-  // Display Preview Card
   function displayVideoPreview(data) {
     previewImage.src = data.thumbnail || 'https://via.placeholder.com/640x360?text=Preview';
     previewDuration.textContent = data.duration || 'HD';
@@ -290,12 +418,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Confirm Download CTA inside Bottom Sheet
+  // Confirm Download CTA
   confirmDownloadBtn?.addEventListener('click', () => {
     qualityBottomSheet.classList.add('hidden');
     if (!selectedQualityItem || !currentVideoData) return;
 
-    // Trigger in-app active download
+    playDownloadStartSound();
+
     const newDownload = {
       id: 'dl_' + Date.now(),
       title: currentVideoData.title || 'Video Download',
@@ -313,14 +442,10 @@ document.addEventListener('DOMContentLoaded', () => {
     downloads.unshift(newDownload);
     renderDownloads();
 
-    // Trigger System Heads-Up Notification simulation
     showSystemNotification(newDownload.title);
-
-    // Switch to Downloads Tab
     document.querySelector('.nav-item[data-view="viewDownloads"]')?.click();
     showToast('Download started in background 🚀', '⬇️');
 
-    // Trigger browser direct download stream
     if (selectedQualityItem.downloadUrl) {
       const link = document.createElement('a');
       link.href = selectedQualityItem.downloadUrl;
@@ -330,7 +455,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.removeChild(link);
     }
 
-    // Animate progress simulation
     animateLiveDownload(newDownload);
   });
 
@@ -344,6 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
         item.progress = 100;
         item.status = 'completed';
         renderDownloads();
+        playSuccessSound();
         showSuccessCelebration(item);
       } else {
         item.progress = progress;
@@ -370,7 +495,6 @@ document.addEventListener('DOMContentLoaded', () => {
     successModal.classList.add('hidden');
   });
 
-  // Render Downloads List
   function renderDownloads() {
     const activeListEl = document.getElementById('activeDownloadsList');
     const completedListEl = document.getElementById('completedDownloadsList');
@@ -454,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Segmented Tabs Switcher
+  // Segmented Tabs
   document.querySelectorAll('.tab-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
@@ -468,7 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Favorites Demo
+  // Favorites
   const favorites = [
     { title: 'Bilibili Trending Donghua Channel', source: '📺 Bilibili', icon: '📺' },
     { title: 'Top TikTok Dance Creators Hub', source: '🎵 TikTok', icon: '🎵' },
@@ -478,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const favListEl = document.getElementById('favoritesList');
   if (favListEl) {
     favListEl.innerHTML = favorites.map(f => `
-      <div class="glass-card" style="padding: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div class="glass-card" style="padding: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; background: var(--glass-card); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="font-size: 24px;">${f.icon}</div>
           <div>
@@ -486,12 +610,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="font-size: 0.72rem; color: var(--neon-cyan);">${f.source}</div>
           </div>
         </div>
-        <button class="glass-btn-icon" title="Quick Download" style="color: var(--neon-cyan);">⚡</button>
+        <button class="btn-3d-dark" style="padding: 6px 12px; font-size: 0.75rem; color: var(--neon-cyan);">⚡ Grab</button>
       </div>
     `).join('');
   }
 
-  // Search Overlay
+  // Search
   const searchTriggerBtn = document.getElementById('searchTriggerBtn');
   const searchOverlay = document.getElementById('searchOverlay');
   const closeSearchBtn = document.getElementById('closeSearchBtn');
@@ -519,19 +643,19 @@ document.addEventListener('DOMContentLoaded', () => {
       searchResultsList.innerHTML = '<div class="search-empty-hint">No matching videos found.</div>';
     } else {
       searchResultsList.innerHTML = matches.map(m => `
-        <div class="glass-card" style="padding: 12px; display: flex; gap: 10px; align-items: center;">
+        <div class="glass-card" style="padding: 12px; display: flex; gap: 10px; align-items: center; background: var(--glass-card); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
           <img src="${m.thumb}" style="width: 50px; height: 35px; border-radius: 6px; object-fit: cover;">
           <div style="flex: 1;">
             <div style="font-size: 0.82rem; font-weight: 700; color: #fff;">${m.title}</div>
             <div style="font-size: 0.7rem; color: var(--neon-cyan);">${m.platform} • ${m.size}</div>
           </div>
-          <button class="glass-btn-icon">▶</button>
+          <button class="btn-3d-dark" style="padding: 6px 10px; font-size: 0.75rem;">▶</button>
         </div>
       `).join('');
     }
   });
 
-  // System Notification Simulation
+  // System Notification
   const sysNotif = document.getElementById('systemNotification');
   const notifTitle = document.getElementById('notifTitle');
   const notifProgressBar = document.getElementById('notifProgressBar');
@@ -552,28 +676,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Toast
-  const toastEl = document.getElementById('glassToast');
-  const toastMsg = document.getElementById('toastMessage');
-  const toastIcon = document.getElementById('toastIcon');
-  let toastTimer = null;
-
   function showToast(msg, icon = '⚡') {
+    const toastEl = document.getElementById('glassToast');
+    const toastMsg = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
     if (!toastEl) return;
-    if (toastTimer) clearTimeout(toastTimer);
     toastMsg.textContent = msg;
     toastIcon.textContent = icon;
     toastEl.classList.remove('hidden');
-    toastTimer = setTimeout(() => toastEl.classList.add('hidden'), 3500);
+    setTimeout(() => toastEl.classList.add('hidden'), 3000);
   }
 
   function triggerHaptic() {
     if (navigator.vibrate) {
-      navigator.vibrate(12);
+      navigator.vibrate(14);
     }
   }
 
-  // Ambient Particles on Canvas
   function initAmbientParticles() {
     const canvas = document.getElementById('ambientCanvas');
     if (!canvas) return;
